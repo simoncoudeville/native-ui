@@ -82,9 +82,14 @@ jobs:
             npm run baseline:check
 
             echo "Build and snapshot check passed — merging."
-            gh pr merge "$pr" --squash --delete-branch \
+            head=$(gh pr view "$pr" --json headRefName --jq .headRefName)
+            gh pr merge "$pr" --squash \
               --subject "chore: refresh Baseline data (auto-merged after ${GRACE_DAYS}d)"
 
-            git checkout -
+            # Delete the branch over the API rather than with `gh pr merge
+            # --delete-branch`, which also tries to switch the local clone to the
+            # base branch — a branch the shallow checkout has never fetched.
+            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${head}" \
+              || echo "Branch ${head} already gone."
             echo "::endgroup::"
           done
