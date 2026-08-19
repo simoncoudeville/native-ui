@@ -1,6 +1,6 @@
 ---
 title: Dialogs you can open without writing JavaScript
-elementName: "<dialog>"
+elementName: "Dialog"
 description: Modal and non-modal dialogs, top-layer promotion and ::backdrop — opened and closed declaratively with the Invoker Commands API.
 webFeatures:
   - dialog
@@ -22,18 +22,18 @@ links:
     kind: mdn
 ---
 
-import Demo from '../../components/Demo.astro';
-import Gotcha from '../../components/Gotcha.astro';
-import DerivedGotchas from '../../components/DerivedGotchas.astro';
+import Demo from "../../components/Demo.astro";
+import Gotcha from "../../components/Gotcha.astro";
+import DerivedGotchas from "../../components/DerivedGotchas.astro";
 
-import modalHtml from '../../demos/dialog/modal/markup.html?raw';
-import modalCss from '../../demos/dialog/modal/styles.css?raw';
-import nonModalHtml from '../../demos/dialog/non-modal/markup.html?raw';
-import nonModalCss from '../../demos/dialog/non-modal/styles.css?raw';
-import fullscreenHtml from '../../demos/dialog/fullscreen/markup.html?raw';
-import fullscreenCss from '../../demos/dialog/fullscreen/styles.css?raw';
-import closedbyHtml from '../../demos/dialog/closedby/markup.html?raw';
-import closedbyCss from '../../demos/dialog/closedby/styles.css?raw';
+import modalHtml from "../../demos/dialog/modal/markup.html?raw";
+import modalCss from "../../demos/dialog/modal/styles.css?raw";
+import nonModalHtml from "../../demos/dialog/non-modal/markup.html?raw";
+import nonModalCss from "../../demos/dialog/non-modal/styles.css?raw";
+import fullscreenHtml from "../../demos/dialog/fullscreen/markup.html?raw";
+import fullscreenCss from "../../demos/dialog/fullscreen/styles.css?raw";
+import closedbyHtml from "../../demos/dialog/closedby/markup.html?raw";
+import closedbyCss from "../../demos/dialog/closedby/styles.css?raw";
 
 `<dialog>` has been widely available for years, but it always came with a
 caveat: you had to reach into JavaScript to call `showModal()` and `close()`.
@@ -125,14 +125,14 @@ hand-written "click outside to close" logic.
 <Gotcha
   title="Invoker commands are still new"
   kind="polyfill"
-  staleWhen={{ feature: 'invoker-commands', baseline: 'high' }}
+  staleWhen={{ feature: "invoker-commands", baseline: "high" }}
 >
   `command` / `commandfor` reached Baseline in December 2025, so anyone on a
   browser more than a release or two old won't have it, and the buttons will do
   nothing at all. That is a hard failure rather than a graceful one. The
   [invokers polyfill](https://github.com/keithamus/invokers-polyfill) fills the
-  gap and is small enough to load conditionally behind a
-  `if (!('command' in HTMLButtonElement.prototype))` check.
+  gap and is small enough to load conditionally behind a `if (!('command' in
+  HTMLButtonElement.prototype))` check.
 </Gotcha>
 
 <Gotcha title="Give focus somewhere sensible" kind="a11y" evergreen>

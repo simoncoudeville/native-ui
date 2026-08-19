@@ -1,6 +1,6 @@
 ---
 title: Carousels without a carousel library
-elementName: "::scroll-button()"
+elementName: "Carousel"
 description: Scroll-snap carousels with native previous/next buttons and dot navigation, built from CSS pseudo-elements and no scroll listeners at all.
 webFeatures:
   - scroll-buttons
@@ -22,20 +22,20 @@ links:
     kind: mdn
 ---
 
-import Demo from '../../components/Demo.astro';
-import Gotcha from '../../components/Gotcha.astro';
-import DerivedGotchas from '../../components/DerivedGotchas.astro';
+import Demo from "../../components/Demo.astro";
+import Gotcha from "../../components/Gotcha.astro";
+import DerivedGotchas from "../../components/DerivedGotchas.astro";
 
-import snapHtml from '../../demos/carousel/snap/markup.html?raw';
-import snapCss from '../../demos/carousel/snap/styles.css?raw';
-import buttonsHtml from '../../demos/carousel/buttons/markup.html?raw';
-import buttonsCss from '../../demos/carousel/buttons/styles.css?raw';
-import fullHtml from '../../demos/carousel/full/markup.html?raw';
-import fullCss from '../../demos/carousel/full/styles.css?raw';
+import snapHtml from "../../demos/carousel/snap/markup.html?raw";
+import snapCss from "../../demos/carousel/snap/styles.css?raw";
+import buttonsHtml from "../../demos/carousel/buttons/markup.html?raw";
+import buttonsCss from "../../demos/carousel/buttons/styles.css?raw";
+import fullHtml from "../../demos/carousel/full/markup.html?raw";
+import fullCss from "../../demos/carousel/full/styles.css?raw";
 
 This is the least supported page on the site, and deliberately so. Scroll
 snapping has been available everywhere for years, but the pieces that turn a
-scroller into a *carousel* — arrows and dots — landed in Chromium 135 and exist
+scroller into a _carousel_ — arrows and dots — landed in Chromium 135 and exist
 nowhere else yet. The badges above say exactly that.
 
 Read this as a preview of where the platform is going, not something to ship
@@ -68,7 +68,7 @@ scroll range, which is the fiddly bit everyone gets wrong by hand.
 />
 
 The two-value `content` syntax is doing real work here:
-`content: '\2190' / 'Scroll to previous item'` sets the visible glyph *and* the
+`content: '\2190' / 'Scroll to previous item'` sets the visible glyph _and_ the
 accessible name, so the button isn't announced as "left arrow".
 
 ## Dot navigation
@@ -94,19 +94,19 @@ variable tracking the active index.
 <Gotcha
   title="Chromium-only, and the failure is invisible"
   kind="quirk"
-  staleWhen={{ feature: 'scroll-buttons', baseline: 'low' }}
+  staleWhen={{ feature: "scroll-buttons", baseline: "low" }}
 >
-  An unsupported browser doesn't error — it just never generates the pseudo-element,
-  so your arrows silently don't exist. If your layout reserved space for them,
-  you get an unexplained gap. Test with
-  `@supports selector(::scroll-button(inline-start))` and design the
-  no-buttons state on purpose, as both demos above do.
+  An unsupported browser doesn't error — it just never generates the
+  pseudo-element, so your arrows silently don't exist. If your layout reserved
+  space for them, you get an unexplained gap. Test with `@supports
+  selector(::scroll-button(inline-start))` and design the no-buttons state on
+  purpose, as both demos above do.
 </Gotcha>
 
 <Gotcha
   title="Scroll markers are a separate feature from scroll buttons"
   kind="quirk"
-  staleWhen={{ feature: 'scroll-markers', baseline: 'low' }}
+  staleWhen={{ feature: "scroll-markers", baseline: "low" }}
 >
   They shipped together in Chromium 135 and are easy to treat as one thing, but
   they are tracked separately and could diverge as other browsers implement
@@ -117,9 +117,9 @@ variable tracking the active index.
 <Gotcha title="You still need to name the scroll region" kind="a11y" evergreen>
   A scroll container full of items is not automatically announced as a carousel.
   Give the list an accessible name and, where the content genuinely is a
-  carousel rather than a list, consider `role="group"` with `aria-roledescription`.
-  Scroll markers are exposed as a tablist-like structure, so avoid layering your
-  own conflicting ARIA on top.
+  carousel rather than a list, consider `role="group"` with
+  `aria-roledescription`. Scroll markers are exposed as a tablist-like
+  structure, so avoid layering your own conflicting ARIA on top.
 </Gotcha>
 
 <Gotcha title="Mandatory snapping can trap content" kind="quirk" evergreen>

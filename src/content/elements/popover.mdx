@@ -1,6 +1,6 @@
 ---
 title: Popovers that position themselves
-elementName: "[popover]"
+elementName: "Popover"
 description: The popover attribute plus CSS anchor positioning — overlays that light-dismiss, escape their stacking context, and reposition themselves when they would overflow.
 webFeatures:
   - popover
@@ -21,18 +21,18 @@ links:
     kind: mdn
 ---
 
-import Demo from '../../components/Demo.astro';
-import Gotcha from '../../components/Gotcha.astro';
-import DerivedGotchas from '../../components/DerivedGotchas.astro';
+import Demo from "../../components/Demo.astro";
+import Gotcha from "../../components/Gotcha.astro";
+import DerivedGotchas from "../../components/DerivedGotchas.astro";
 
-import basicHtml from '../../demos/popover/basic/markup.html?raw';
-import basicCss from '../../demos/popover/basic/styles.css?raw';
-import actionsHtml from '../../demos/popover/actions/markup.html?raw';
-import actionsCss from '../../demos/popover/actions/styles.css?raw';
-import anchoredHtml from '../../demos/popover/anchored/markup.html?raw';
-import anchoredCss from '../../demos/popover/anchored/styles.css?raw';
-import fallbackHtml from '../../demos/popover/fallback/markup.html?raw';
-import fallbackCss from '../../demos/popover/fallback/styles.css?raw';
+import basicHtml from "../../demos/popover/basic/markup.html?raw";
+import basicCss from "../../demos/popover/basic/styles.css?raw";
+import actionsHtml from "../../demos/popover/actions/markup.html?raw";
+import actionsCss from "../../demos/popover/actions/styles.css?raw";
+import anchoredHtml from "../../demos/popover/anchored/markup.html?raw";
+import anchoredCss from "../../demos/popover/anchored/styles.css?raw";
+import fallbackHtml from "../../demos/popover/fallback/markup.html?raw";
+import fallbackCss from "../../demos/popover/fallback/styles.css?raw";
 
 Tooltips, menus and disclosure panels have historically needed two libraries:
 one to handle click-outside-to-close and focus, another to work out where the
@@ -109,15 +109,14 @@ anything more elaborate, `@position-try` lets you define named custom positions.
 <Gotcha
   title="Anchor positioning is the newer half by a wide margin"
   kind="quirk"
-  staleWhen={{ feature: 'anchor-positioning', baseline: 'low' }}
+  staleWhen={{ feature: "anchor-positioning", baseline: "low" }}
 >
   The popover half of this page is Baseline; the positioning half is not, and
-  the two shipped years apart. Unsupported browsers ignore `position-anchor`
-  and `anchor()` completely, which leaves the popover centred in the viewport
-  rather than attached to its button. That is survivable for a menu but looks
-  broken for a tooltip, so gate the fancy version behind
-  `@supports (anchor-name: --x)` and give everyone else a statically positioned
-  fallback.
+  the two shipped years apart. Unsupported browsers ignore `position-anchor` and
+  `anchor()` completely, which leaves the popover centred in the viewport rather
+  than attached to its button. That is survivable for a menu but looks broken
+  for a tooltip, so gate the fancy version behind `@supports (anchor-name: --x)`
+  and give everyone else a statically positioned fallback.
 </Gotcha>
 
 <Gotcha title="A popover is not a dialog" kind="a11y" evergreen>
@@ -143,10 +142,14 @@ anything more elaborate, `@position-try` lets you define named custom positions.
   nothing.
 </Gotcha>
 
-<Gotcha title="Scroll containers can clip the anchor, not the popover" kind="quirk" evergreen>
-  The popover lives in the top layer while its anchor sits in normal flow. Scroll
-  the anchor out of view inside a container and the popover happily follows it
-  off-screen, floating over unrelated content. `position-visibility:
+<Gotcha
+  title="Scroll containers can clip the anchor, not the popover"
+  kind="quirk"
+  evergreen
+>
+  The popover lives in the top layer while its anchor sits in normal flow.
+  Scroll the anchor out of view inside a container and the popover happily
+  follows it off-screen, floating over unrelated content. `position-visibility:
   anchors-visible` tells the browser to hide the popover once its anchor is no
   longer visible.
 </Gotcha>
