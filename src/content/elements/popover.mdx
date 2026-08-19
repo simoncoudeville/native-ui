@@ -1,22 +1,22 @@
 ---
 title: Popovers that position themselves
 elementName: "Popover"
-description: The popover attribute plus CSS anchor positioning — overlays that light-dismiss, escape their stacking context, and reposition themselves when they would overflow.
+description: "The popover attribute plus CSS anchor positioning: overlays that light-dismiss, escape their stacking context, and reposition themselves when they would overflow."
 webFeatures:
   - popover
   - anchor-positioning
 order: 2
 links:
-  - label: HTML Standard — the popover attribute
+  - label: "HTML Standard: the popover attribute"
     href: https://html.spec.whatwg.org/multipage/popover.html
     kind: spec
   - label: CSS Anchor Positioning Level 1
     href: https://drafts.csswg.org/css-anchor-position-1/
     kind: spec
-  - label: MDN — Popover API
+  - label: "MDN: Popover API"
     href: https://developer.mozilla.org/en-US/docs/Web/API/Popover_API
     kind: mdn
-  - label: MDN — CSS anchor positioning
+  - label: "MDN: CSS anchor positioning"
     href: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning
     kind: mdn
 ---
@@ -39,7 +39,7 @@ one to handle click-outside-to-close and focus, another to work out where the
 thing should actually sit. The `popover` attribute covers the first. CSS anchor
 positioning covers the second.
 
-Together they replace a surprising amount of code — and unlike a JavaScript
+Together they replace a surprising amount of code. Unlike a JavaScript
 positioner, the browser recalculates on scroll and resize without a single
 event listener.
 
@@ -61,7 +61,7 @@ never clipped by `overflow: hidden` and never lose a `z-index` fight.
 ## auto versus manual
 
 `popover="auto"` (the default) light-dismisses and forces one-at-a-time
-behaviour. `popover="manual"` does neither — it stays until something explicitly
+behaviour. `popover="manual"` does neither. It stays until something explicitly
 hides it. `popovertargetaction` picks which of `show`, `hide` or `toggle` a
 button performs.
 
@@ -95,7 +95,7 @@ first one that fits.
   name="fallback"
   html={fallbackHtml}
   css={fallbackCss}
-  caption="Scroll the rail until the button nears the viewport edge — the popover flips sides on its own."
+  caption="Scroll the rail until the button nears the viewport edge. The popover flips sides on its own."
 />
 
 The keywords do the obvious thing: `flip-inline` mirrors the position across the
@@ -122,7 +122,7 @@ anything more elaborate, `@position-try` lets you define named custom positions.
 <Gotcha title="A popover is not a dialog" kind="a11y" evergreen>
   Popovers don't trap focus and don't make the rest of the page inert. That is
   correct for menus and tooltips, and wrong for anything demanding a decision
-  before continuing — use `<dialog>` and `showModal()` there. Reach for a
+  before continuing. Use `<dialog>` and `showModal()` there. Reach for a
   popover when dismissing it by ignoring it is a reasonable outcome.
 </Gotcha>
 
@@ -137,7 +137,7 @@ anything more elaborate, `@position-try` lets you define named custom positions.
 <Gotcha title="Anchored elements must be positioned" kind="quirk" evergreen>
   `anchor()` only resolves inside `inset` properties on an absolutely or fixed
   positioned element. Popovers get `position: fixed` from the UA stylesheet so
-  this works by default — but the moment you anchor something that *isn't* a
+  this works by default, but the moment you anchor something that *isn't* a
   popover, forgetting `position: absolute` makes the whole rule silently do
   nothing.
 </Gotcha>

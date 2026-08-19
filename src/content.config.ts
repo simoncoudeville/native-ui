@@ -4,7 +4,7 @@ import { z } from 'astro/zod';
 
 /**
  * One entry per documented element. Adding a fourth page is a new .mdx file
- * plus a folder under src/demos — no code changes anywhere else.
+ * plus a folder under src/demos, with no code changes anywhere else.
  */
 const elements = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/elements' }),

@@ -30,7 +30,7 @@ async function readJson(path, hint) {
   }
 }
 
-const report = await readJson(REPORT, 'Run `npm run build` first — it emits the report.');
+const report = await readJson(REPORT, 'Run `npm run build` first. It emits the report.');
 const snapshot = await readJson(
   SNAPSHOT,
   'Run `npm run baseline:update` once to record the current state.',
@@ -103,9 +103,9 @@ if (changes.length === 0) {
 if (report.retired.length > 0) {
   lines.push(`## Auto-retired prose (${report.retired.length})`, '');
   lines.push('These blocks stopped rendering because their premise expired.');
-  lines.push('The text is still in the source — ask Claude to rewrite it if a page now reads thin.', '');
+  lines.push('The text is still in the source. Ask Claude to rewrite it if a page now reads thin.', '');
   for (const entry of report.retired) {
-    lines.push(`- **${entry.summary}** — ${entry.reason} (${entry.page})`);
+    lines.push(`- **${entry.summary}**: ${entry.reason} (${entry.page})`);
   }
   lines.push('');
 }
@@ -130,6 +130,6 @@ await writeFile(SUMMARY, `${summary}\n`, 'utf8');
 console.log(summary);
 
 if (changes.length > 0) {
-  console.error(`\n${changes.length} change(s) detected — snapshot is out of date.`);
+  console.error(`\n${changes.length} change(s) detected. Snapshot is out of date.`);
   process.exit(1);
 }

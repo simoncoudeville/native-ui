@@ -8,16 +8,16 @@ webFeatures:
   - scroll-snap
 order: 3
 links:
-  - label: CSS Overflow Level 5 — scroll buttons
+  - label: "CSS Overflow Level 5: scroll buttons"
     href: https://drafts.csswg.org/css-overflow-5/#scroll-buttons
     kind: spec
-  - label: CSS Overflow Level 5 — scroll markers
+  - label: "CSS Overflow Level 5: scroll markers"
     href: https://drafts.csswg.org/css-overflow-5/#scroll-markers
     kind: spec
-  - label: MDN — ::scroll-button()
+  - label: "MDN: ::scroll-button()"
     href: https://developer.mozilla.org/en-US/docs/Web/CSS/::scroll-button
     kind: mdn
-  - label: MDN — ::scroll-marker-group
+  - label: "MDN: ::scroll-marker-group"
     href: https://developer.mozilla.org/en-US/docs/Web/CSS/::scroll-marker-group
     kind: mdn
 ---
@@ -35,7 +35,7 @@ import fullCss from "../../demos/carousel/full/styles.css?raw";
 
 This is the least supported page on the site, and deliberately so. Scroll
 snapping has been available everywhere for years, but the pieces that turn a
-scroller into a _carousel_ — arrows and dots — landed in Chromium 135 and exist
+scroller into a _carousel_ (arrows and dots) landed in Chromium 135 and exist
 nowhere else yet. The badges above say exactly that.
 
 Read this as a preview of where the platform is going, not something to ship
@@ -51,7 +51,7 @@ the whole mechanism. It has been Baseline since 2022.
   name="snap"
   html={snapHtml}
   css={snapCss}
-  caption="Widely available. Drag, flick or shift-scroll — it snaps to each item."
+  caption="Widely available. Drag, flick or shift-scroll, and it snaps to each item."
 />
 
 ## Previous and next buttons
@@ -64,7 +64,7 @@ scroll range, which is the fiddly bit everyone gets wrong by hand.
   name="buttons"
   html={buttonsHtml}
   css={buttonsCss}
-  caption="Chromium only for now — other browsers see the notice and a plain scroller."
+  caption="Chromium only for now. Other browsers see the notice and a plain scroller."
 />
 
 The two-value `content` syntax is doing real work here:
@@ -96,7 +96,7 @@ variable tracking the active index.
   kind="quirk"
   staleWhen={{ feature: "scroll-buttons", baseline: "low" }}
 >
-  An unsupported browser doesn't error — it just never generates the
+  An unsupported browser doesn't error. It just never generates the
   pseudo-element, so your arrows silently don't exist. If your layout reserved
   space for them, you get an unexplained gap. Test with `@supports
   selector(::scroll-button(inline-start))` and design the no-buttons state on
@@ -132,6 +132,6 @@ variable tracking the active index.
 <Gotcha title="Respect reduced motion" kind="a11y" evergreen>
   `scroll-behavior: smooth` on the container makes the buttons animate, which is
   exactly the kind of large-area movement that triggers discomfort for some
-  people. Wrap it in `@media (prefers-reduced-motion: no-preference)` — the
+  people. Wrap it in `@media (prefers-reduced-motion: no-preference)`. The
   buttons still work, they just jump instead of gliding.
 </Gotcha>

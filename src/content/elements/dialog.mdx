@@ -1,23 +1,23 @@
 ---
 title: Dialogs you can open without writing JavaScript
 elementName: "Dialog"
-description: Modal and non-modal dialogs, top-layer promotion and ::backdrop — opened and closed declaratively with the Invoker Commands API.
+description: Modal and non-modal dialogs, top-layer promotion and ::backdrop, opened and closed declaratively with the Invoker Commands API.
 webFeatures:
   - dialog
   - invoker-commands
   - dialog-closedby
 order: 1
 links:
-  - label: HTML Standard — the dialog element
+  - label: "HTML Standard: the dialog element"
     href: https://html.spec.whatwg.org/multipage/interactive-elements.html#the-dialog-element
     kind: spec
-  - label: HTML Standard — the command attribute
+  - label: "HTML Standard: the command attribute"
     href: https://html.spec.whatwg.org/multipage/form-elements.html#attr-button-command
     kind: spec
-  - label: MDN — <dialog>
+  - label: "MDN: <dialog>"
     href: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
     kind: mdn
-  - label: MDN — Invoker Commands API
+  - label: "MDN: Invoker Commands API"
     href: https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
     kind: mdn
 ---
@@ -39,7 +39,7 @@ import closedbyCss from "../../demos/dialog/closedby/styles.css?raw";
 caveat: you had to reach into JavaScript to call `showModal()` and `close()`.
 The Invoker Commands API removes that last step. A button with `command` and
 `commandfor` names the element it acts on and the action it performs, and the
-browser wires up the rest — including keyboard behaviour and focus.
+browser wires up the rest, including keyboard behaviour and focus.
 
 Every demo on this page is static HTML and CSS. There is no JavaScript on the
 page driving any of them.
@@ -54,7 +54,7 @@ gets promoted to the **top layer**, the rest of the page becomes inert, and a
   name="modal"
   html={modalHtml}
   css={modalCss}
-  caption="Opened and closed entirely through command / commandfor — no event listeners."
+  caption="Opened and closed entirely through command / commandfor, with no event listeners."
 />
 
 The backdrop animates because `transition-behavior: allow-discrete` lets
@@ -66,7 +66,8 @@ halfway.
 ## Non-modal dialogs
 
 `command="show"` maps to `show()`. There is no backdrop, no focus trap, and the
-rest of the page stays interactive — closer to an inline panel than an overlay.
+rest of the page stays interactive. That is closer to an inline panel than an
+overlay.
 
 <Demo
   name="non-modal"
@@ -79,7 +80,7 @@ rest of the page stays interactive — closer to an inline panel than an overlay
 
 This is the demo that justifies rendering everything inline instead of in an
 iframe. The dialog below lives inside a bordered, padded card in the middle of
-this page — and opens at the full size of your viewport.
+this page, and opens at the full size of your viewport.
 
 <Demo
   name="fullscreen"
@@ -91,7 +92,7 @@ this page — and opens at the full size of your viewport.
 No `position: fixed`, no `z-index`, no portal. A modal dialog is moved to the
 top layer, which sits above the entire document and outside every stacking
 context on the page. Put that same dialog in an iframe and `100dvh` would mean
-the height of the iframe — the effect disappears completely.
+the height of the iframe. The effect disappears completely.
 
 ## Controlling how a dialog closes
 
@@ -117,7 +118,7 @@ hand-written "click outside to close" logic.
   Safari ignores the attribute entirely. A modal dialog there still closes on
   Escape (that is `<dialog>`'s built-in behaviour, not `closedby`), so
   `closerequest` degrades perfectly. The one that genuinely differs is
-  `closedby="any"` — Safari users get no light dismiss, so never rely on
+  `closedby="any"`. Safari users get no light dismiss, so never rely on
   clicking the backdrop as the *only* way out. Always ship a visible close
   button, which you want for accessibility regardless.
 </Gotcha>
@@ -136,7 +137,7 @@ hand-written "click outside to close" logic.
 </Gotcha>
 
 <Gotcha title="Give focus somewhere sensible" kind="a11y" evergreen>
-  When a modal opens, focus moves into the dialog — but where it lands is your
+  When a modal opens, focus moves into the dialog, but where it lands is your
   call. Put `autofocus` on the safest control, not the most destructive one: on
   a delete confirmation that means Cancel, so an accidental Enter doesn't
   destroy anything. On close, focus returns to the invoking button
@@ -147,13 +148,13 @@ hand-written "click outside to close" logic.
 <Gotcha title="A dialog is not automatically a labelled region" kind="a11y" evergreen>
   Screen readers announce the dialog role, but the accessible name comes from
   you. Point `aria-labelledby` at the dialog's heading, or set `aria-label`.
-  Also resist `role="dialog"` on the element itself — `<dialog>` already carries
+  Also resist `role="dialog"` on the element itself. `<dialog>` already carries
   it, and re-declaring it is noise.
 </Gotcha>
 
 <Gotcha title="method=dialog forms still have a place" kind="quirk" evergreen>
   `command="close"` closes the dialog but sets no return value. If you need to
   know *which* button dismissed it, a `<form method="dialog">` with
-  `<button value="confirm">` still sets `dialog.returnValue` — the two
+  `<button value="confirm">` still sets `dialog.returnValue`. The two
   mechanisms coexist, and the form approach predates invokers by years.
 </Gotcha>

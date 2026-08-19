@@ -4,7 +4,7 @@ import { getUsageShare } from '../lib/caniuse.ts';
 import { recordFeature } from '../lib/report.ts';
 
 interface Props {
-  /** A web-features id, or several — the badge then shows the weakest. */
+  /** A web-features id, or several. The badge then shows the weakest. */
   featureId: string;
   /** Render the full panel with per-browser versions. */
   detailed?: boolean;

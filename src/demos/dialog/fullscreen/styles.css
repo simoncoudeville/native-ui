@@ -2,7 +2,7 @@
   dialog {
     /* No positioning tricks needed. A modal dialog is in the top layer,
        so the demo card's border, overflow and stacking context can't
-       clip it — this is the behaviour an iframe would destroy. */
+       clip it. This is the behaviour an iframe would destroy. */
     inline-size: 100vw;
     max-inline-size: 100vw;
     block-size: 100dvh;

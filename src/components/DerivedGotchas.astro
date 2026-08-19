@@ -59,7 +59,7 @@ const hasContent = facts.length > 0 || notes.length > 0;
       <p class="derived-source">
         {notes.length > 0 || facts.length > 0 ? 'Generated from ' : ''}
         web-features and MDN browser-compat-data at build time
-        {truncated > 0 && ` — ${truncated} further note${truncated === 1 ? '' : 's'} omitted`}.
+        {truncated > 0 && `, plus ${truncated} further note${truncated === 1 ? '' : 's'} omitted`}.
         Only caveats that still apply are shown; notes attached to versions where
         the bug was fixed are filtered out.
       </p>

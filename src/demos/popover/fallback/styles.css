@@ -7,7 +7,7 @@
 
   /* Stays within the content column. A full-bleed trick like
      `margin-inline: calc(50% - 50vw)` assumes the column is centred in the
-     viewport, which stops being true the moment there's a sidebar — it then
+     viewport, which stops being true the moment there's a sidebar, and it then
      pushes the whole page into horizontal overflow. */
   .rail {
     inline-size: 100%;
@@ -20,7 +20,7 @@
   }
 
   /* Sized against the rail, not the viewport, so at rest the button sits near
-     the right-hand edge — where there is no room for the popover's preferred
+     the right-hand edge, where there is no room for the popover's preferred
      position and the fallback has to fire. */
   .spacer {
     flex: 0 0 92%;
@@ -34,7 +34,7 @@
   #tip {
     position-anchor: --tip-anchor;
 
-    /* Clear the UA stylesheet's `inset: 0` first — otherwise the end insets
+    /* Clear the UA stylesheet's `inset: 0` first, otherwise the end insets
        stay at 0, the box is over-constrained, and anchor() is ignored. */
     inset: auto;
 
