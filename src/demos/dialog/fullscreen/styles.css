@@ -12,6 +12,19 @@
     border: 0;
     background: var(--bg);
     color: var(--text);
+
+    /* Centring lives here, not in the [open] rule. display is held to the end
+       of the exit by allow-discrete, so place-items declared alongside it would
+       revert first and drop the contents into the corner mid-fade. */
+    place-items: center;
+
+    /* Opacity only. A panel this size sliding in would expose a bare strip
+       along one edge, so the shared --overlay-offset is left out here. */
+    opacity: 0;
+    transition:
+      opacity var(--overlay-duration) ease,
+      display var(--overlay-duration) allow-discrete,
+      overlay var(--overlay-duration) allow-discrete;
   }
 
   /* Centring the contents needs display: grid, but setting it on the bare
@@ -19,7 +32,13 @@
      leave this one sitting in the page. Attach it to [open] instead. */
   dialog[open] {
     display: grid;
-    place-items: center;
+    opacity: 1;
+  }
+
+  @starting-style {
+    dialog[open] {
+      opacity: 0;
+    }
   }
 
   dialog::backdrop {

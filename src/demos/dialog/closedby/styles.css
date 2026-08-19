@@ -18,10 +18,44 @@
     background: var(--overlay-bg);
     color: var(--text);
     box-shadow: var(--shadow-overlay);
+
+    opacity: 0;
+    translate: var(--overlay-offset);
+    transition:
+      opacity var(--overlay-duration) ease,
+      translate var(--overlay-duration) ease,
+      display var(--overlay-duration) allow-discrete,
+      overlay var(--overlay-duration) allow-discrete;
+  }
+
+  dialog[open] {
+    opacity: 1;
+    translate: none;
+  }
+
+  @starting-style {
+    dialog[open] {
+      opacity: 0;
+      translate: var(--overlay-offset);
+    }
   }
 
   dialog::backdrop {
+    background: transparent;
+    transition:
+      background var(--overlay-duration) ease,
+      display var(--overlay-duration) allow-discrete,
+      overlay var(--overlay-duration) allow-discrete;
+  }
+
+  dialog[open]::backdrop {
     background: var(--overlay-backdrop);
+  }
+
+  @starting-style {
+    dialog[open]::backdrop {
+      background: transparent;
+    }
   }
 
   dialog p {

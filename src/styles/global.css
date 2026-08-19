@@ -67,6 +67,13 @@
     --overlay-radius: var(--radius-lg);
     --overlay-padding: var(--space-m);
     --overlay-backdrop: oklch(20% 0 0 / 0.5);
+
+    /* Entry and exit. The offset is a translate value, so a demo that opens
+       from a different edge reassigns it rather than writing its own keyframes.
+       The reduced-motion rule in the base layer cuts the duration to nothing,
+       which leaves the discrete steps intact and drops the movement. */
+    --overlay-duration: 0.2s;
+    --overlay-offset: 0 0.5rem;
   }
 }
 

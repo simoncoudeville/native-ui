@@ -7,6 +7,31 @@
     background: var(--overlay-bg);
     color: var(--text);
     box-shadow: var(--shadow-overlay);
+
+    /* The closed state, and the values the exit transition runs back to.
+       allow-discrete brings display and overlay into the transition, so the
+       popover stays visible and stays in the top layer until the fade ends. */
+    opacity: 0;
+    translate: var(--overlay-offset);
+    transition:
+      opacity var(--overlay-duration) ease,
+      translate var(--overlay-duration) ease,
+      display var(--overlay-duration) allow-discrete,
+      overlay var(--overlay-duration) allow-discrete;
+  }
+
+  [popover]:popover-open {
+    opacity: 1;
+    translate: none;
+  }
+
+  /* An element coming out of display: none has no previous style to animate
+     from, so the values it enters from are declared here. */
+  @starting-style {
+    [popover]:popover-open {
+      opacity: 0;
+      translate: var(--overlay-offset);
+    }
   }
 
   [popover] h3 {

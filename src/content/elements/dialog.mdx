@@ -25,6 +25,7 @@ links:
 import Demo from "../../components/Demo.astro";
 import Gotcha from "../../components/Gotcha.astro";
 import DerivedGotchas from "../../components/DerivedGotchas.astro";
+import BaselineBadge from "../../components/BaselineBadge.astro";
 
 import modalHtml from "../../demos/dialog/modal/markup.html?raw";
 import modalCss from "../../demos/dialog/modal/styles.css?raw";
@@ -55,11 +56,46 @@ gets promoted to the **top layer**, the rest of the page becomes inert, and a
   caption="Opened and closed entirely through command / commandfor, with no event listeners."
 />
 
-The backdrop animates because `transition-behavior: allow-discrete` lets
-`display` and `overlay` participate in transitions, with `@starting-style`
-supplying the entry values. Without `overlay` in that list the dialog would
-snap out of the top layer the moment it closes, cutting the exit animation off
-halfway.
+## Animating a dialog
+
+A dialog is harder to animate than an ordinary box. Opening it moves the
+element from `display: none` to displayed and from outside the top layer to
+inside it, and both of those are discrete: they flip rather than interpolate.
+A plain `transition: opacity 0.2s` therefore gives an entry that never runs and
+an exit that is cut off at its first frame. Three additions fix that.
+
+`transition-behavior: allow-discrete` makes the flipping wait. Listed against
+`display`, it keeps the element rendered for the length of the transition
+rather than removing it at once. In the `transition` shorthand it is written as
+a keyword after the property and duration.
+
+`@starting-style` supplies the values to animate *from*. An element that was
+`display: none` has no previous style to interpolate from, so without it the
+dialog arrives at full opacity and only the exit animates.
+
+Only `display` gets held back like that. Anything else in the `[open]` rule
+reverts as soon as the dialog closes, so a `place-items` or a `gap` declared
+beside `display: grid` is gone while the box is still visible, and the contents
+jump during the fade. Keep those on the base rule and leave `[open]` to
+`display` and the animated values.
+
+`overlay` tracks whether an element is in the top layer. The browser sets it
+and transitioning it is the only thing an author can do with it. With
+`allow-discrete` it holds the dialog in the top layer until the exit finishes,
+instead of dropping it out on the first frame.
+
+| Piece                                 | Support                                            |
+| ------------------------------------- | -------------------------------------------------- |
+| `transition`                          | <BaselineBadge featureId="transitions" />          |
+| `transition-behavior: allow-discrete` | <BaselineBadge featureId="transition-behavior" />  |
+| `@starting-style`                     | <BaselineBadge featureId="starting-style" />       |
+| `overlay`                             | <BaselineBadge featureId="overlay" />              |
+
+`::backdrop` is a separate element as far as animation goes, so it needs its
+own `transition`, its own `@starting-style` and its own `allow-discrete`
+entries. Animating the dialog alone leaves the dim behind it snapping in and
+out. The same three pieces drive the [popovers](/elements/popover/) on the next
+page.
 
 ## Non-modal dialogs
 
@@ -131,6 +167,19 @@ hand-written "click outside to close" logic.
   [invokers polyfill](https://github.com/keithamus/invokers-polyfill) fills the
   gap and is small enough to load conditionally behind a `if (!('command' in
   HTMLButtonElement.prototype))` check.
+</Gotcha>
+
+<Gotcha
+  title="overlay is the one piece of the animation that isn't Baseline"
+  kind="quirk"
+  staleWhen={{ feature: "overlay", baseline: "low" }}
+>
+  A browser that doesn't know the property drops it from the transition list
+  and runs everything else, so the dialog still fades out. It leaves the top
+  layer as it closes instead of when the fade ends, so the exit is painted in
+  normal document order, where content that follows the dialog can cover it.
+  Short exits make that repaint hard to catch. Nothing else about the dialog
+  changes.
 </Gotcha>
 
 <Gotcha title="Give focus somewhere sensible" kind="a11y" evergreen>

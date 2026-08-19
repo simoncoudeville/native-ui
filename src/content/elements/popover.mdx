@@ -28,6 +28,7 @@ links:
 import Demo from "../../components/Demo.astro";
 import Gotcha from "../../components/Gotcha.astro";
 import DerivedGotchas from "../../components/DerivedGotchas.astro";
+import BaselineBadge from "../../components/BaselineBadge.astro";
 
 import basicHtml from "../../demos/popover/basic/markup.html?raw";
 import basicCss from "../../demos/popover/basic/styles.css?raw";
@@ -131,6 +132,44 @@ The keywords do the obvious thing: `flip-inline` mirrors the position across the
 anchor horizontally, `flip-block` vertically, and you can combine them. For
 anything more elaborate, `@position-try` lets you define named custom positions.
 
+## Animating in and out
+
+Every popover above fades and slides as it opens and closes, using the same
+four pieces as the [dialogs](/elements/dialog/).
+
+An overlay is harder to animate than an ordinary box. It moves from
+`display: none` to displayed, and from outside the top layer to inside it, and
+both of those are discrete: they flip rather than interpolate. On its own,
+`transition: opacity 0.2s` gives an entry that never runs and an exit that is
+cut off at its first frame.
+
+`transition-behavior: allow-discrete` is what makes the flipping wait. Listed
+against `display`, it holds the element rendered for the length of the
+transition instead of removing it at once. In the `transition` shorthand it is
+written as a keyword after the property and duration.
+
+`@starting-style` supplies the values to animate *from*. An element that was
+`display: none` has no previous style to interpolate from, so without it the
+popover arrives at full opacity and only the exit animates.
+
+That holding-back applies to `display` alone. Everything else in the
+`:popover-open` rule reverts the instant the popover closes, so a `gap` or a
+`justify-items` declared next to `display: grid` disappears while the box is
+still on screen, and the panel reflows halfway through its own exit. Put the
+grid properties on the base rule and leave only `display` in the open state.
+
+`overlay` tracks whether an element is in the top layer. It is set by the
+browser, and transitioning it is the only thing you can do with it. Listed with
+`allow-discrete`, it keeps the popover painted above the page until the exit
+finishes.
+
+| Piece                                 | Support                                            |
+| ------------------------------------- | -------------------------------------------------- |
+| `transition`                          | <BaselineBadge featureId="transitions" />          |
+| `transition-behavior: allow-discrete` | <BaselineBadge featureId="transition-behavior" />  |
+| `@starting-style`                     | <BaselineBadge featureId="starting-style" />       |
+| `overlay`                             | <BaselineBadge featureId="overlay" />              |
+
 ## Gotchas
 
 <DerivedGotchas featureId="anchor-positioning" />
@@ -159,6 +198,18 @@ anything more elaborate, `@position-try` lets you define named custom positions.
   so prefer it for a plain toggle, or load the [invokers
   polyfill](https://github.com/keithamus/invokers-polyfill) behind a `if
   (!('command' in HTMLButtonElement.prototype))` check.
+</Gotcha>
+
+<Gotcha
+  title="overlay is the one piece of the animation that isn't Baseline"
+  kind="quirk"
+  staleWhen={{ feature: "overlay", baseline: "low" }}
+>
+  A browser that doesn't know the property drops it from the transition list
+  and runs the rest, so the popover still fades. It just leaves the top layer
+  the moment it closes, which puts the fade back in normal paint order where
+  later content can cover it. The fix is not a polyfill, it's a short exit:
+  at a couple of hundred milliseconds the repaint is hard to catch.
 </Gotcha>
 
 <Gotcha title="A popover is not a dialog" kind="a11y" evergreen>
