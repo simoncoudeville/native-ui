@@ -1,0 +1,29 @@
+@scope (.demo-snap) {
+  .track {
+    display: flex;
+    gap: 1rem;
+    inline-size: 100%;
+    padding: 0 0 1rem;
+    margin: 0;
+    list-style: none;
+
+    overflow-x: auto;
+    /* mandatory forces a rest position on every scroll end. */
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  .track > li {
+    flex: 0 0 min(18rem, 70%);
+    scroll-snap-align: center;
+
+    display: grid;
+    place-items: center;
+    min-block-size: 9rem;
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklch, var(--accent) calc(var(--i) * 7%), var(--bg-sunken));
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+}

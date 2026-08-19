@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import ElementCard from '../components/ElementCard.astro';
+import { getCollection } from 'astro:content';
+
+const elements = (await getCollection('elements', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<Base
+  title="Native UI — interactive elements the platform ships"
+  description="A catalogue of modern HTML and CSS interactive elements that used to need a JavaScript library and now ship in the browser."
+>
+  <article class="doc">
+    <header class="doc-header">
+      <p class="eyebrow mono">Native UI</p>
+      <h1>The platform does this now.</h1>
+      <p class="lede">
+        Dialogs, popovers, anchored tooltips and carousels used to mean reaching for
+        a library. They are HTML attributes and CSS pseudo-elements now. This is a
+        catalogue of what has landed, what it looks like running, and where it still
+        bites.
+      </p>
+    </header>
+
+    <ul class="card-grid">
+      {
+        elements.map((entry) => (
+          <ElementCard
+            href={`/elements/${entry.id}/`}
+            elementName={entry.data.elementName}
+            description={entry.data.description}
+            webFeatures={entry.data.webFeatures}
+          />
+        ))
+      }
+    </ul>
+
+    <div class="prose">
+      <h2>How it is built</h2>
+      <p>
+        Every demo is plain HTML, CSS and vanilla JavaScript — no framework runtime,
+        no CSS framework, nothing to install to reproduce it. The code you read is
+        the code that runs: each demo's markup and stylesheet are read from disk at
+        build time, rendered into the page, and syntax-highlighted from the same
+        string, so the snippet and the working example cannot drift apart.
+      </p>
+      <p>
+        The site itself is a static Astro build. Pages come from MDX, and adding a
+        new element means one content file and one folder of demo files.
+      </p>
+
+      <h2>Where the support data comes from</h2>
+      <p>
+        Nothing on this site is hand-typed. Baseline status comes from the
+        <a href="https://github.com/web-platform-dx/web-features">web-features</a>
+        dataset, per-browser versions from
+        <a href="https://github.com/mdn/browser-compat-data">MDN browser-compat-data</a>,
+        and usage share from <a href="https://caniuse.com/">caniuse</a> — all read at
+        build time from the installed packages.
+      </p>
+      <p>
+        A scheduled job refreshes those packages, rebuilds, and flags any feature
+        whose status moved, which is how a page that says <em>limited availability</em>
+        today stops saying it once the last browser ships.
+      </p>
+    </div>
+  </article>
+</Base>

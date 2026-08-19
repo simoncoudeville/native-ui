@@ -1,0 +1,66 @@
+@scope (.demo-full) {
+  .unsupported-note {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--status-limited);
+    border-radius: var(--radius);
+    background: var(--status-limited-soft);
+    font-size: var(--step--1);
+    margin-block-end: 1rem;
+  }
+
+  @supports selector(::scroll-marker-group) {
+    .unsupported-note {
+      display: none;
+    }
+  }
+
+  .track {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0 0 1rem;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+
+    /* Creates the marker container after the scroller. The browser
+       generates one marker per item and tracks which is current. */
+    scroll-marker-group: after;
+  }
+
+  .track > li {
+    flex: 0 0 min(16rem, 65%);
+    scroll-snap-align: center;
+    display: grid;
+    place-items: center;
+    min-block-size: 8rem;
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklch, var(--accent) calc(var(--i) * 8%), var(--bg-sunken));
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .track::scroll-marker-group {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    padding-block-start: 0.75rem;
+  }
+
+  .track > li::scroll-marker {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  /* :target-current is the marker for the item currently in view —
+     the active-dot state, with no scroll listener anywhere. */
+  .track > li::scroll-marker:target-current {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+}

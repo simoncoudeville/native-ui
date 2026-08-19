@@ -1,0 +1,141 @@
+---
+import { Code } from 'astro:components';
+import { SHIKI_THEMES } from '../lib/shiki.ts';
+
+interface Props {
+  /** Unique per page; also the @scope class the demo's CSS targets. */
+  name: string;
+  html: string;
+  css: string;
+  js?: string;
+  caption?: string;
+}
+
+const { name, html, css, js, caption } = Astro.props;
+
+const panels = [
+  { id: 'html', label: 'HTML', code: html, lang: 'html' as const },
+  { id: 'css', label: 'CSS', code: css, lang: 'css' as const },
+  ...(js ? [{ id: 'js', label: 'JS', code: js, lang: 'js' as const }] : []),
+];
+---
+
+{/*
+  The demo's CSS is injected verbatim, exactly as it appears in the snippet
+  below. is:inline keeps Astro from rewriting it, which matters because the
+  file is authored wrapped in @scope — the mechanism that stops one demo's
+  styles reaching another without resorting to an iframe.
+*/}
+<style is:inline set:html={css}></style>
+
+<figure class="demo-figure">
+  {/*
+    Rendered with set:html from the same string fed to Shiki below, so the demo
+    and its snippet cannot drift apart. A side benefit: this markup never passes
+    through Astro's HTML compiler, so demo syntax stays byte-exact.
+  */}
+  <div class:list={['demo', `demo-${name}`]} set:html={html} />
+
+  <div class="code-block">
+    <div class="code-tabs" role="tablist" data-code-tabs hidden>
+      {
+        panels.map((panel, index) => (
+          <button
+            type="button"
+            role="tab"
+            class="code-tab"
+            id={`tab-${name}-${panel.id}`}
+            aria-controls={`panel-${name}-${panel.id}`}
+            aria-selected={index === 0 ? 'true' : 'false'}
+          >
+            {panel.label}
+          </button>
+        ))
+      }
+      <button type="button" class="copy-button" data-copy>Copy</button>
+    </div>
+
+    {
+      panels.map((panel) => (
+        <div
+          class="code-panel"
+          id={`panel-${name}-${panel.id}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${name}-${panel.id}`}
+          data-lang={panel.label}
+        >
+          <p class="code-lang mono muted" data-code-label>
+            {panel.label}
+          </p>
+          <Code
+            code={panel.code.trim()}
+            lang={panel.lang}
+            themes={SHIKI_THEMES}
+            defaultColor={false}
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+{/*
+  Progressive enhancement: without JavaScript every panel is visible and
+  labelled, so the code is still readable. The tab bar only appears once this
+  runs. Astro bundles this script once no matter how many demos a page has.
+*/}
+<script>
+  for (const block of document.querySelectorAll<HTMLElement>('.code-block')) {
+    const tabBar = block.querySelector<HTMLElement>('[data-code-tabs]');
+    const tabs = [...block.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...block.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    if (!tabBar || tabs.length === 0) continue;
+
+    tabBar.hidden = false;
+    for (const label of block.querySelectorAll<HTMLElement>('[data-code-label]')) {
+      label.hidden = true;
+    }
+
+    const select = (index: number) => {
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === index));
+        tab.tabIndex = i === index ? 0 : -1;
+      });
+      panels.forEach((panel, i) => {
+        panel.hidden = i !== index;
+      });
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(index));
+      tab.addEventListener('keydown', (event) => {
+        const offset = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+        if (offset === 0) return;
+        event.preventDefault();
+        const next = (index + offset + tabs.length) % tabs.length;
+        tabs[next].focus();
+        select(next);
+      });
+    });
+
+    select(0);
+
+    const copy = block.querySelector<HTMLButtonElement>('[data-copy]');
+    copy?.addEventListener('click', async () => {
+      const active = panels.find((panel) => !panel.hidden);
+      const code = active?.querySelector('code')?.textContent;
+      if (!code) return;
+      try {
+        await navigator.clipboard.writeText(code);
+        copy.textContent = 'Copied';
+      } catch {
+        copy.textContent = 'Press ⌘C';
+      }
+      setTimeout(() => {
+        copy.textContent = 'Copy';
+      }, 2000);
+    });
+  }
+</script>

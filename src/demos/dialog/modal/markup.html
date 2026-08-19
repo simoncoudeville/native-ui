@@ -1,0 +1,13 @@
+<button command="show-modal" commandfor="confirm" class="primary">
+  Delete workspace
+</button>
+
+<dialog id="confirm" closedby="closerequest">
+  <h3>Delete workspace?</h3>
+  <p>This removes all 42 projects and can't be undone.</p>
+
+  <div class="actions">
+    <button command="close" commandfor="confirm">Cancel</button>
+    <button command="close" commandfor="confirm" class="primary">Delete</button>
+  </div>
+</dialog>

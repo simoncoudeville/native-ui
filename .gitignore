@@ -1,0 +1,17 @@
+# build output
+dist/
+.astro/
+
+# generated baseline report (the committed snapshot is src/data/baseline-snapshot.json)
+.baseline/
+
+# dependencies
+node_modules/
+
+# logs & environment
+npm-debug.log*
+.env
+.env.production
+
+# macOS
+.DS_Store

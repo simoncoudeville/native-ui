@@ -1,0 +1,49 @@
+---
+import { getFeature, worstLevel, LEVEL_LABEL, type BaselineLevel } from '../lib/baseline.ts';
+import { recordFeature } from '../lib/report.ts';
+
+interface Props {
+  href: string;
+  elementName: string;
+  description: string;
+  webFeatures: string[];
+}
+
+const { href, elementName, description, webFeatures } = Astro.props;
+
+for (const id of webFeatures) recordFeature(id);
+
+/*
+  The badge shows the *primary* feature (first in webFeatures), not the weakest.
+  Showing the weakest made all three cards read "Limited availability", which
+  told the reader nothing and misrepresented <dialog> — widely available for
+  years, with only one optional attribute lagging. The weaker features are
+  disclosed on the line beneath instead, so the card stays honest without
+  flattening every page to its worst constituent.
+*/
+const [primaryId] = webFeatures;
+const primary = getFeature(primaryId);
+const level: BaselineLevel = primary.level;
+
+const lowest = worstLevel(webFeatures);
+const alsoCovers = webFeatures.length - 1;
+const hasWeaker = lowest !== level && alsoCovers > 0;
+---
+
+<li>
+  <a class="card" href={href}>
+    <div class="card-name">{elementName}</div>
+    <p class="card-desc">{description}</p>
+    <div class="card-status">
+      <span class="badge" data-level={level}>{LEVEL_LABEL[level]}</span>
+      {
+        hasWeaker && (
+          <span class="card-caveat">
+            +{alsoCovers} newer {alsoCovers === 1 ? 'feature' : 'features'}, down to{' '}
+            {LEVEL_LABEL[lowest].toLowerCase()}
+          </span>
+        )
+      }
+    </div>
+  </a>
+</li>

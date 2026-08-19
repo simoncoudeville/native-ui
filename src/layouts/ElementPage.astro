@@ -1,0 +1,49 @@
+---
+import Base from './Base.astro';
+import BaselineBadge from '../components/BaselineBadge.astro';
+
+interface Props {
+  title: string;
+  elementName: string;
+  description: string;
+  webFeatures: string[];
+  links: { label: string; href: string; kind: 'spec' | 'mdn' }[];
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { title, elementName, description, webFeatures, links, headings } = Astro.props;
+---
+
+<Base title={`${elementName} — Native UI`} description={description} headings={headings}>
+  <article class="doc">
+    <header class="doc-header">
+      <p class="eyebrow mono">{elementName}</p>
+      <h1>{title}</h1>
+      <p class="lede">{description}</p>
+    </header>
+
+    <div class="support-stack">
+      {webFeatures.map((featureId) => <BaselineBadge featureId={featureId} detailed />)}
+    </div>
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    {
+      links.length > 0 && (
+        <section class="prose">
+          <h2>Specification and reference</h2>
+          <ul class="spec-links">
+            {links.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+                <span class="muted"> · {link.kind === 'spec' ? 'Spec' : 'MDN'}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
+</Base>

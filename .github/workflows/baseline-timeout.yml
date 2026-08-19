@@ -1,0 +1,51 @@
+name: Baseline PR timeout
+
+# A PR waiting for review only helps while there is attention to give it.
+# This merges an untouched data PR after a grace period so a busy fortnight
+# can't quietly park the site on stale support data.
+
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge-stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Merge data PRs older than the grace period
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Repository variable. Set to 0 to require a manual merge always.
+          GRACE_DAYS: ${{ vars.AUTO_MERGE_AFTER_DAYS || '7' }}
+        run: |
+          set -euo pipefail
+
+          if [ "$GRACE_DAYS" = "0" ]; then
+            echo "AUTO_MERGE_AFTER_DAYS=0 — timeout merging disabled."
+            exit 0
+          fi
+
+          cutoff=$(date -u -d "-${GRACE_DAYS} days" +%Y-%m-%dT%H:%M:%SZ)
+          echo "Merging labelled data PRs created before $cutoff"
+
+          # Restricted to the label this repo's own refresh job applies, so it
+          # can never touch a human's pull request.
+          gh pr list \
+            --label baseline-data \
+            --state open \
+            --json number,createdAt,isDraft,mergeable,title \
+            --jq ".[] | select(.createdAt < \"$cutoff\") | select(.isDraft == false) | .number" \
+          | while read -r pr; do
+              echo "PR #$pr is past the grace period — enabling auto-merge."
+              # --auto still waits for required checks, so a red build is
+              # never merged by the timeout path.
+              gh pr merge "$pr" --auto --squash \
+                --subject "chore: refresh Baseline data (auto-merged after ${GRACE_DAYS}d)"
+            done

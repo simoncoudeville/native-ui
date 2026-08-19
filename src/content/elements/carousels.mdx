@@ -1,0 +1,137 @@
+---
+title: Carousels without a carousel library
+elementName: "::scroll-button()"
+description: Scroll-snap carousels with native previous/next buttons and dot navigation, built from CSS pseudo-elements and no scroll listeners at all.
+webFeatures:
+  - scroll-buttons
+  - scroll-markers
+  - scroll-snap
+order: 3
+links:
+  - label: CSS Overflow Level 5 — scroll buttons
+    href: https://drafts.csswg.org/css-overflow-5/#scroll-buttons
+    kind: spec
+  - label: CSS Overflow Level 5 — scroll markers
+    href: https://drafts.csswg.org/css-overflow-5/#scroll-markers
+    kind: spec
+  - label: MDN — ::scroll-button()
+    href: https://developer.mozilla.org/en-US/docs/Web/CSS/::scroll-button
+    kind: mdn
+  - label: MDN — ::scroll-marker-group
+    href: https://developer.mozilla.org/en-US/docs/Web/CSS/::scroll-marker-group
+    kind: mdn
+---
+
+import Demo from '../../components/Demo.astro';
+import Gotcha from '../../components/Gotcha.astro';
+import DerivedGotchas from '../../components/DerivedGotchas.astro';
+
+import snapHtml from '../../demos/carousel/snap/markup.html?raw';
+import snapCss from '../../demos/carousel/snap/styles.css?raw';
+import buttonsHtml from '../../demos/carousel/buttons/markup.html?raw';
+import buttonsCss from '../../demos/carousel/buttons/styles.css?raw';
+import fullHtml from '../../demos/carousel/full/markup.html?raw';
+import fullCss from '../../demos/carousel/full/styles.css?raw';
+
+This is the least supported page on the site, and deliberately so. Scroll
+snapping has been available everywhere for years, but the pieces that turn a
+scroller into a *carousel* — arrows and dots — landed in Chromium 135 and exist
+nowhere else yet. The badges above say exactly that.
+
+Read this as a preview of where the platform is going, not something to ship
+unguarded. The good news is that the base layer degrades honestly: without the
+new pseudo-elements you still have a perfectly usable scrolling list.
+
+## The part that works everywhere
+
+`scroll-snap-type` on the container and `scroll-snap-align` on the children is
+the whole mechanism. It has been Baseline since 2022.
+
+<Demo
+  name="snap"
+  html={snapHtml}
+  css={snapCss}
+  caption="Widely available. Drag, flick or shift-scroll — it snaps to each item."
+/>
+
+## Previous and next buttons
+
+`::scroll-button()` generates a real button that scrolls its container in the
+given direction. The browser disables it automatically at either end of the
+scroll range, which is the fiddly bit everyone gets wrong by hand.
+
+<Demo
+  name="buttons"
+  html={buttonsHtml}
+  css={buttonsCss}
+  caption="Chromium only for now — other browsers see the notice and a plain scroller."
+/>
+
+The two-value `content` syntax is doing real work here:
+`content: '\2190' / 'Scroll to previous item'` sets the visible glyph *and* the
+accessible name, so the button isn't announced as "left arrow".
+
+## Dot navigation
+
+`scroll-marker-group` generates one marker per item, and `:target-current`
+matches whichever one is in view. That last part is what normally requires an
+IntersectionObserver.
+
+<Demo
+  name="full"
+  html={fullHtml}
+  css={fullCss}
+  caption="The dots are focusable, arrow-key navigable, and track the scroll position natively."
+/>
+
+There is no JavaScript on this page. No scroll listener, no observer, no state
+variable tracking the active index.
+
+## Gotchas
+
+<DerivedGotchas featureId="scroll-buttons" />
+
+<Gotcha
+  title="Chromium-only, and the failure is invisible"
+  kind="quirk"
+  staleWhen={{ feature: 'scroll-buttons', baseline: 'low' }}
+>
+  An unsupported browser doesn't error — it just never generates the pseudo-element,
+  so your arrows silently don't exist. If your layout reserved space for them,
+  you get an unexplained gap. Test with
+  `@supports selector(::scroll-button(inline-start))` and design the
+  no-buttons state on purpose, as both demos above do.
+</Gotcha>
+
+<Gotcha
+  title="Scroll markers are a separate feature from scroll buttons"
+  kind="quirk"
+  staleWhen={{ feature: 'scroll-markers', baseline: 'low' }}
+>
+  They shipped together in Chromium 135 and are easy to treat as one thing, but
+  they are tracked separately and could diverge as other browsers implement
+  them. Feature-detect each independently rather than assuming one implies the
+  other.
+</Gotcha>
+
+<Gotcha title="You still need to name the scroll region" kind="a11y" evergreen>
+  A scroll container full of items is not automatically announced as a carousel.
+  Give the list an accessible name and, where the content genuinely is a
+  carousel rather than a list, consider `role="group"` with `aria-roledescription`.
+  Scroll markers are exposed as a tablist-like structure, so avoid layering your
+  own conflicting ARIA on top.
+</Gotcha>
+
+<Gotcha title="Mandatory snapping can trap content" kind="quirk" evergreen>
+  `scroll-snap-type: x mandatory` forces a snap position after every scroll. If
+  an item is taller or wider than the viewport, users can be unable to reach
+  parts of it, because the browser keeps pulling them back to a snap point.
+  `proximity` is the safer default when item sizes vary.
+</Gotcha>
+
+<Gotcha title="Respect reduced motion" kind="a11y" evergreen>
+  `scroll-behavior: smooth` on the container makes the buttons animate, which is
+  exactly the kind of large-area movement that triggers discomfort for some
+  people. Wrap it in `@media (prefers-reduced-motion: no-preference)` — the
+  buttons still work, they just jump instead of gliding.
+</Gotcha>

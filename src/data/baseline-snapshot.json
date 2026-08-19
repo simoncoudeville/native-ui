@@ -1,0 +1,275 @@
+{
+  "updatedAt": "2026-08-19T10:22:17.247Z",
+  "features": {
+    "anchor-positioning": {
+      "level": "limited",
+      "support": {
+        "chrome": {
+          "state": "partial",
+          "version": "125"
+        },
+        "edge": {
+          "state": "partial",
+          "version": "125"
+        },
+        "firefox": {
+          "state": "partial",
+          "version": "147"
+        },
+        "safari": {
+          "state": "partial",
+          "version": "26"
+        },
+        "chrome_android": {
+          "state": "partial",
+          "version": "125"
+        },
+        "firefox_android": {
+          "state": "partial",
+          "version": "147"
+        },
+        "safari_ios": {
+          "state": "partial",
+          "version": "26"
+        }
+      }
+    },
+    "dialog": {
+      "level": "widely",
+      "lowDate": "2022-03-14",
+      "highDate": "2024-09-14",
+      "support": {
+        "chrome": {
+          "state": "full",
+          "version": "37"
+        },
+        "edge": {
+          "state": "full",
+          "version": "79"
+        },
+        "firefox": {
+          "state": "full",
+          "version": "98"
+        },
+        "safari": {
+          "state": "full",
+          "version": "15.4"
+        },
+        "chrome_android": {
+          "state": "full",
+          "version": "37"
+        },
+        "firefox_android": {
+          "state": "full",
+          "version": "98"
+        },
+        "safari_ios": {
+          "state": "full",
+          "version": "15.4"
+        }
+      }
+    },
+    "dialog-closedby": {
+      "level": "limited",
+      "support": {
+        "chrome": {
+          "state": "full",
+          "version": "134"
+        },
+        "edge": {
+          "state": "full",
+          "version": "134"
+        },
+        "firefox": {
+          "state": "full",
+          "version": "141"
+        },
+        "safari": {
+          "state": "none",
+          "version": null
+        },
+        "chrome_android": {
+          "state": "full",
+          "version": "134"
+        },
+        "firefox_android": {
+          "state": "full",
+          "version": "141"
+        },
+        "safari_ios": {
+          "state": "none",
+          "version": null
+        }
+      }
+    },
+    "invoker-commands": {
+      "level": "newly",
+      "lowDate": "2025-12-12",
+      "support": {
+        "chrome": {
+          "state": "full",
+          "version": "135"
+        },
+        "edge": {
+          "state": "full",
+          "version": "135"
+        },
+        "firefox": {
+          "state": "full",
+          "version": "144"
+        },
+        "safari": {
+          "state": "full",
+          "version": "26.2"
+        },
+        "chrome_android": {
+          "state": "full",
+          "version": "135"
+        },
+        "firefox_android": {
+          "state": "full",
+          "version": "144"
+        },
+        "safari_ios": {
+          "state": "full",
+          "version": "26.2"
+        }
+      }
+    },
+    "popover": {
+      "level": "newly",
+      "lowDate": "2025-01-27",
+      "support": {
+        "chrome": {
+          "state": "full",
+          "version": "116"
+        },
+        "edge": {
+          "state": "full",
+          "version": "116"
+        },
+        "firefox": {
+          "state": "full",
+          "version": "125"
+        },
+        "safari": {
+          "state": "full",
+          "version": "17"
+        },
+        "chrome_android": {
+          "state": "full",
+          "version": "116"
+        },
+        "firefox_android": {
+          "state": "full",
+          "version": "125"
+        },
+        "safari_ios": {
+          "state": "full",
+          "version": "18.3"
+        }
+      }
+    },
+    "scroll-buttons": {
+      "level": "limited",
+      "support": {
+        "chrome": {
+          "state": "partial",
+          "version": "135"
+        },
+        "edge": {
+          "state": "partial",
+          "version": "135"
+        },
+        "firefox": {
+          "state": "none",
+          "version": null
+        },
+        "safari": {
+          "state": "none",
+          "version": null
+        },
+        "chrome_android": {
+          "state": "partial",
+          "version": "135"
+        },
+        "firefox_android": {
+          "state": "none",
+          "version": null
+        },
+        "safari_ios": {
+          "state": "none",
+          "version": null
+        }
+      }
+    },
+    "scroll-markers": {
+      "level": "limited",
+      "support": {
+        "chrome": {
+          "state": "full",
+          "version": "135"
+        },
+        "edge": {
+          "state": "full",
+          "version": "135"
+        },
+        "firefox": {
+          "state": "none",
+          "version": null
+        },
+        "safari": {
+          "state": "none",
+          "version": null
+        },
+        "chrome_android": {
+          "state": "full",
+          "version": "135"
+        },
+        "firefox_android": {
+          "state": "none",
+          "version": null
+        },
+        "safari_ios": {
+          "state": "none",
+          "version": null
+        }
+      }
+    },
+    "scroll-snap": {
+      "level": "widely",
+      "lowDate": "2020-01-15",
+      "highDate": "2022-07-15",
+      "support": {
+        "chrome": {
+          "state": "full",
+          "version": "69"
+        },
+        "edge": {
+          "state": "full",
+          "version": "79"
+        },
+        "firefox": {
+          "state": "full",
+          "version": "68"
+        },
+        "safari": {
+          "state": "full",
+          "version": "11"
+        },
+        "chrome_android": {
+          "state": "full",
+          "version": "69"
+        },
+        "firefox_android": {
+          "state": "full",
+          "version": "68"
+        },
+        "safari_ios": {
+          "state": "full",
+          "version": "11"
+        }
+      }
+    }
+  }
+}

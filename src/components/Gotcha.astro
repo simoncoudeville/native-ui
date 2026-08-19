@@ -1,0 +1,50 @@
+---
+import { evaluateStaleWhen, type StaleWhen } from '../lib/gotchas.ts';
+import { recordRetired, recordUnguarded } from '../lib/report.ts';
+
+interface Props {
+  title: string;
+  /**
+   * The condition that makes this block stop being true. Any claim resting on a
+   * browser *not* supporting something must declare one, otherwise nothing can
+   * ever tell us the prose has gone stale.
+   */
+  staleWhen?: StaleWhen;
+  /**
+   * Marks a claim that cannot expire — accessibility guidance, spec behaviour —
+   * so it isn't reported as an unguarded block. Deliberately explicit: the
+   * point is to tell "timeless" apart from "forgot the assertion".
+   */
+  evergreen?: boolean;
+  kind?: 'a11y' | 'quirk' | 'polyfill';
+}
+
+const { title, staleWhen, evergreen = false, kind } = Astro.props;
+const page = Astro.url.pathname;
+
+let retired = false;
+
+if (staleWhen) {
+  const result = evaluateStaleWhen(staleWhen);
+  if (result.stale) {
+    retired = true;
+    recordRetired({ page, summary: title, reason: result.reason });
+  }
+} else if (!evergreen) {
+  recordUnguarded({ page, summary: title });
+}
+---
+
+{
+  /*
+    A retired block renders nothing. The prose stays in the .mdx source so it
+    can be rewritten, but it is never served — the failure mode is losing a
+    caveat, never publishing one that has become false.
+  */
+  !retired && (
+    <div class="gotcha" data-kind={kind}>
+      <p class="gotcha-title">{title}</p>
+      <slot />
+    </div>
+  )
+}

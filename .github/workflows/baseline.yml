@@ -1,0 +1,67 @@
+name: Baseline data refresh
+
+on:
+  schedule:
+    # Mondays, 06:00 UTC.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Update platform data sources
+        run: npm update web-features @mdn/browser-compat-data caniuse-db
+
+      - name: Rebuild (emits .baseline/report.json)
+        run: npm run build
+
+      - name: Diff against the committed snapshot
+        id: check
+        run: |
+          if npm run --silent baseline:check; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Record the new snapshot
+        if: steps.check.outputs.changed == 'true'
+        run: npm run baseline:update
+
+      - name: Build the pull request body
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          {
+            cat .baseline/summary.md
+            echo
+            echo "---"
+            echo
+            echo "Opened automatically by the weekly Baseline refresh."
+            echo "Badges and derived gotchas update themselves when this merges."
+            echo "If it sits untouched for \`AUTO_MERGE_AFTER_DAYS\` days, it merges on its own."
+          } > .baseline/pr-body.md
+
+      - name: Open pull request
+        if: steps.check.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: chore/baseline-refresh
+          title: 'Baseline: platform support changed'
+          body-path: .baseline/pr-body.md
+          commit-message: 'chore: refresh Baseline data'
+          labels: baseline-data
+          delete-branch: true

@@ -1,0 +1,885 @@
+@layer reset, tokens, base, layout, components, demo, utilities;
+
+@layer tokens {
+  :root {
+    /* One declaration makes every light-dark() below follow the OS setting.
+       No toggle, no script, no prefers-color-scheme query anywhere in the site. */
+    color-scheme: light dark;
+
+    /* Neutral greys: chroma 0, so they read as actual grey rather than the
+       faintly blue "cool grey" a hue-tinted ramp gives you. */
+    --bg: light-dark(oklch(100% 0 0), oklch(15% 0 0));
+    --bg-raised: light-dark(oklch(98% 0 0), oklch(19% 0 0));
+    --bg-sunken: light-dark(oklch(96.5% 0 0), oklch(12% 0 0));
+
+    --text: light-dark(oklch(20% 0 0), oklch(95% 0 0));
+    --text-muted: light-dark(oklch(45% 0 0), oklch(72% 0 0));
+    --text-faint: light-dark(oklch(58% 0 0), oklch(58% 0 0));
+
+    --border: light-dark(oklch(90% 0 0), oklch(27% 0 0));
+    --border-strong: light-dark(oklch(78% 0 0), oklch(40% 0 0));
+
+    --accent: light-dark(oklch(50% 0.19 265), oklch(78% 0.14 265));
+    --accent-soft: light-dark(oklch(95% 0.03 265), oklch(28% 0.06 265));
+
+    --status-widely: light-dark(oklch(48% 0.14 155), oklch(78% 0.15 155));
+    --status-widely-soft: light-dark(oklch(95% 0.04 155), oklch(26% 0.05 155));
+    --status-newly: light-dark(oklch(48% 0.15 250), oklch(78% 0.13 250));
+    --status-newly-soft: light-dark(oklch(95% 0.035 250), oklch(26% 0.05 250));
+    --status-limited: light-dark(oklch(52% 0.15 60), oklch(80% 0.13 70));
+    --status-limited-soft: light-dark(oklch(95% 0.05 75), oklch(27% 0.05 65));
+
+    --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+      'Liberation Mono', monospace;
+
+    --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+    --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+    --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.45rem);
+    --step-2: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+    --step-3: clamp(2rem, 1.6rem + 2vw, 3rem);
+
+    --space-3xs: 0.25rem;
+    --space-2xs: 0.5rem;
+    --space-xs: 0.75rem;
+    --space-s: 1rem;
+    --space-m: 1.5rem;
+    --space-l: 2.5rem;
+    --space-xl: 4rem;
+    --space-2xl: 6rem;
+
+    --radius: 0.5rem;
+    --radius-lg: 0.875rem;
+    --measure: 70ch;
+    --sidebar: 17rem;
+    --content: 52rem;
+
+    --shadow-raised: 0 1px 2px light-dark(oklch(0% 0 0 / 0.06), oklch(0% 0 0 / 0.4)),
+      0 4px 16px light-dark(oklch(0% 0 0 / 0.07), oklch(0% 0 0 / 0.5));
+    --shadow-overlay: 0 4px 12px light-dark(oklch(0% 0 0 / 0.1), oklch(0% 0 0 / 0.5)),
+      0 16px 48px light-dark(oklch(0% 0 0 / 0.12), oklch(0% 0 0 / 0.6));
+  }
+}
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  /* The rule above outranks the UA stylesheet's `margin: auto` on dialogs and
+     popovers — author styles beat UA styles whatever the layer — which is why
+     an otherwise untouched showModal() dialog or open popover pins itself to
+     the top-left corner instead of centring in the viewport. Put the centring
+     back at zero specificity, so any demo that positions its own overlay still
+     overrides it. */
+  :where(dialog, [popover]) {
+    margin: auto;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100svh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    line-height: 1.15;
+    font-weight: 600;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer base {
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+  }
+
+  a {
+    color: var(--accent);
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: from-font;
+  }
+
+  code,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  :where(p, li) code {
+    background: var(--bg-sunken);
+    border: 1px solid var(--border);
+    border-radius: 0.3em;
+    padding: 0.1em 0.35em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+  }
+}
+
+@layer layout {
+  /*
+    Documentation shell: a sticky sidebar column and a scrolling content
+    column. No top bar — the sidebar carries the identity and the whole
+    catalogue, so vertical space above the content stays free.
+  */
+  .shell {
+    display: grid;
+    grid-template-columns: var(--sidebar) minmax(0, 1fr);
+    align-items: start;
+    min-block-size: 100svh;
+  }
+
+  .shell-main {
+    min-inline-size: 0;
+    padding: var(--space-xl) var(--space-l) var(--space-l);
+  }
+
+  .shell-main > main {
+    outline: none;
+  }
+
+  .doc {
+    inline-size: min(100%, var(--content));
+
+    & > * + * {
+      margin-block-start: var(--space-l);
+    }
+  }
+
+  .prose {
+    inline-size: min(100%, var(--measure));
+
+    & > * + * {
+      margin-block-start: var(--space-s);
+    }
+
+    & > * + :is(h2, h3) {
+      margin-block-start: var(--space-l);
+    }
+
+    & h2 {
+      font-size: var(--step-2);
+      letter-spacing: -0.02em;
+      scroll-margin-block-start: var(--space-m);
+    }
+
+    & h3 {
+      font-size: var(--step-1);
+      scroll-margin-block-start: var(--space-m);
+    }
+
+    & ul,
+    & ol {
+      padding-inline-start: 1.4em;
+      display: grid;
+      gap: var(--space-2xs);
+    }
+  }
+
+  /* Demos and code blocks are wider than the reading measure. */
+  .prose > :is(.demo-figure, .card-grid, .support-panel) {
+    inline-size: min(100%, var(--content));
+    max-inline-size: none;
+  }
+
+  .stack-l > * + * {
+    margin-block-start: var(--space-l);
+  }
+
+  .support-stack {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  @media (width < 60rem) {
+    .shell {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .shell-main {
+      padding: var(--space-l) var(--space-s) var(--space-s);
+    }
+  }
+}
+
+@layer components {
+  .skip-link {
+    position: absolute;
+    inset-block-start: var(--space-2xs);
+    inset-inline-start: var(--space-2xs);
+    z-index: 10;
+    padding: 0.5em 1em;
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    text-decoration: none;
+
+    &:not(:focus-visible) {
+      clip-path: inset(50%);
+      block-size: 1px;
+      inline-size: 1px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
+  /* ── Sidebar ─────────────────────────────────────────────────── */
+
+  .sidebar {
+    position: sticky;
+    inset-block-start: 0;
+    block-size: 100svh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-m) var(--space-s) var(--space-l);
+    border-inline-end: 1px solid var(--border);
+    background: var(--bg-sunken);
+    display: grid;
+    align-content: start;
+    gap: var(--space-m);
+    font-size: var(--step--1);
+    scrollbar-width: thin;
+  }
+
+  .brand {
+    display: flex;
+    gap: var(--space-2xs);
+    align-items: start;
+    padding-inline: var(--space-2xs);
+    color: var(--text);
+    text-decoration: none;
+
+    & .brand-mark {
+      inline-size: 1.1rem;
+      block-size: 1.1rem;
+      margin-block-start: 0.15em;
+      flex: none;
+      fill: none;
+      stroke: var(--text-faint);
+      stroke-width: 1.5;
+    }
+
+    & .brand-mark-inner {
+      fill: var(--accent);
+      stroke: none;
+    }
+
+    & .brand-text {
+      display: grid;
+      gap: 0.1em;
+      font-size: var(--step-0);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    & small {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: var(--text-faint);
+      text-wrap: pretty;
+    }
+  }
+
+  .nav-group {
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  .nav-label {
+    padding-inline: var(--space-2xs);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-block-end: var(--space-3xs);
+  }
+
+  .nav-list {
+    display: grid;
+    gap: 1px;
+    list-style: none;
+    padding: 0;
+
+    & > li > a {
+      display: block;
+      padding: 0.35em var(--space-2xs);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      text-decoration: none;
+
+      &:hover {
+        background: var(--bg-raised);
+        color: var(--text);
+      }
+
+      &[aria-current='page'] {
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-weight: 600;
+      }
+    }
+  }
+
+  /* Sections of the page you are on, nested under its entry. */
+  .nav-sections {
+    display: grid;
+    gap: 1px;
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-3xs);
+    margin-inline-start: var(--space-xs);
+    border-inline-start: 1px solid var(--border);
+
+    & a {
+      display: block;
+      padding: 0.25em var(--space-2xs);
+      color: var(--text-faint);
+      text-decoration: none;
+      text-wrap: pretty;
+
+      &:hover {
+        color: var(--text);
+      }
+    }
+  }
+
+  @media (width < 60rem) {
+    .sidebar {
+      position: static;
+      block-size: auto;
+      border-inline-end: 0;
+      border-block-end: 1px solid var(--border);
+      gap: var(--space-s);
+    }
+
+    /* The catalogue turns into one scrollable row; page sections drop out
+       rather than pushing the content off screen. */
+    .nav-list {
+      grid-auto-flow: column;
+      grid-auto-columns: max-content;
+      gap: var(--space-3xs);
+      overflow-x: auto;
+      padding-block-end: var(--space-3xs);
+    }
+
+    .nav-sections {
+      display: none;
+    }
+  }
+
+  /* ── Page header ─────────────────────────────────────────────── */
+
+  .doc-header {
+    inline-size: min(100%, var(--measure));
+
+    & h1 {
+      font-size: var(--step-3);
+      letter-spacing: -0.03em;
+    }
+
+    & > * + * {
+      margin-block-start: var(--space-xs);
+    }
+  }
+
+  .eyebrow {
+    font-size: var(--step--1);
+    color: var(--text-faint);
+  }
+
+  .site-footer {
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-m);
+    border-block-start: 1px solid var(--border);
+    color: var(--text-faint);
+    font-size: var(--step--1);
+    inline-size: min(100%, var(--content));
+
+    & > * + * {
+      margin-block-start: var(--space-2xs);
+    }
+
+    & a {
+      color: var(--text-muted);
+    }
+  }
+
+  /* ── Element cards ───────────────────────────────────────────── */
+
+  .card-grid {
+    display: grid;
+    gap: var(--space-s);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    list-style: none;
+    padding: 0;
+
+    /* Stretch the anchor to the row height so the badges line up across the
+       row however long a description runs. */
+    & > li {
+      display: grid;
+    }
+  }
+
+  .card {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: var(--space-m);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s, translate 0.15s;
+
+    &:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-raised);
+      translate: 0 -2px;
+    }
+
+    & .card-name {
+      font-family: var(--font-mono);
+      font-size: var(--step-1);
+      letter-spacing: -0.02em;
+      margin-block-end: var(--space-2xs);
+    }
+
+    & .card-desc {
+      color: var(--text-muted);
+      font-size: var(--step--1);
+      margin-block-end: var(--space-s);
+    }
+
+    & .card-desc {
+      flex: 1;
+    }
+
+    & .card-status {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2xs);
+    }
+
+    & .card-caveat {
+      font-size: var(--step--1);
+      color: var(--text-faint);
+    }
+  }
+
+  /* ── Baseline badge ──────────────────────────────────────────── */
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: 0.25em 0.7em;
+    border-radius: 100px;
+    font-size: var(--step--1);
+    font-weight: 500;
+    line-height: 1.4;
+    border: 1px solid transparent;
+
+    &::before {
+      content: '';
+      inline-size: 0.5em;
+      block-size: 0.5em;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    &[data-level='widely'] {
+      color: var(--status-widely);
+      background: var(--status-widely-soft);
+    }
+
+    &[data-level='newly'] {
+      color: var(--status-newly);
+      background: var(--status-newly-soft);
+    }
+
+    &[data-level='limited'] {
+      color: var(--status-limited);
+      background: var(--status-limited-soft);
+    }
+  }
+
+  .support-panel {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    padding: var(--space-m);
+    display: grid;
+    gap: var(--space-s);
+
+    & .support-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2xs) var(--space-s);
+    }
+
+    & .support-feature {
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      color: var(--text-muted);
+    }
+
+    & .support-meta {
+      font-size: var(--step--1);
+      color: var(--text-muted);
+    }
+  }
+
+  .browser-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    list-style: none;
+    padding: 0;
+  }
+
+  .browser-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4em;
+    padding: 0.2em 0.6em;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    font-size: var(--step--1);
+
+    & .browser-version {
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+
+    &[data-state='none'] {
+      color: var(--text-faint);
+
+      & .browser-version {
+        color: inherit;
+      }
+    }
+
+    &[data-state='partial'] {
+      border-color: var(--status-limited);
+      color: var(--status-limited);
+    }
+  }
+
+  /* ── Gotchas ─────────────────────────────────────────────────── */
+
+  .gotcha {
+    border-inline-start: 3px solid var(--border-strong);
+    padding-inline-start: var(--space-s);
+
+    & > * + * {
+      margin-block-start: var(--space-2xs);
+    }
+
+    & .gotcha-title {
+      font-size: var(--step-0);
+      font-weight: 600;
+    }
+
+    &[data-kind='a11y'] {
+      border-color: var(--status-newly);
+    }
+
+    &[data-kind='quirk'] {
+      border-color: var(--status-limited);
+    }
+  }
+
+  .derived-notes {
+    display: grid;
+    gap: var(--space-xs);
+    list-style: none;
+    padding: 0;
+    font-size: var(--step--1);
+
+    & li {
+      display: grid;
+      gap: var(--space-3xs);
+      padding: var(--space-xs);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-sunken);
+    }
+
+    & .note-browsers {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      color: var(--text-muted);
+    }
+  }
+
+  .derived-source {
+    font-size: var(--step--1);
+    color: var(--text-faint);
+  }
+
+  /* ── Code blocks ─────────────────────────────────────────────── */
+
+  .code-block {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: clip;
+    background: var(--bg-sunken);
+  }
+
+  .code-tabs {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    padding: var(--space-3xs);
+    border-block-end: 1px solid var(--border);
+    background: var(--bg-raised);
+  }
+
+  .code-tab {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    padding: 0.3em 0.75em;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &[aria-selected='true'] {
+      background: var(--bg-sunken);
+      color: var(--text);
+    }
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+
+  .copy-button {
+    margin-inline-start: auto;
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-muted);
+    font-size: var(--step--1);
+    padding: 0.3em 0.75em;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+  }
+
+  .code-panel[hidden] {
+    display: none;
+  }
+
+  /* Shiki emits --shiki-light / --shiki-dark because defaultColor is false, so
+     code themes resolve through exactly the same light-dark() mechanism as the
+     rest of the site. */
+  .astro-code {
+    margin: 0;
+    padding: var(--space-s);
+    overflow-x: auto;
+    font-size: var(--step--1);
+    line-height: 1.7;
+    background-color: light-dark(var(--shiki-light-bg), var(--shiki-dark-bg));
+
+    & code {
+      font-size: inherit;
+    }
+
+    & span {
+      color: light-dark(var(--shiki-light), var(--shiki-dark));
+      font-style: light-dark(var(--shiki-light-font-style), var(--shiki-dark-font-style));
+      font-weight: light-dark(var(--shiki-light-font-weight), var(--shiki-dark-font-weight));
+    }
+  }
+
+  .spec-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-s);
+    list-style: none;
+    padding: 0;
+    font-size: var(--step--1);
+  }
+
+  .support-note {
+    display: grid;
+    gap: var(--space-2xs);
+    padding: var(--space-s);
+    border: 1px solid var(--status-limited);
+    border-radius: var(--radius);
+    background: var(--status-limited-soft);
+    color: var(--text);
+    font-size: var(--step--1);
+  }
+}
+
+@layer demo {
+  /* Shared chrome for every demo. Demo-specific rules live in the demo's own
+     styles.css, wrapped in @scope so they cannot reach a sibling demo. */
+  .demo {
+    padding: var(--space-l) var(--space-m);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-block-end: 0;
+    background: var(--bg-raised);
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+  }
+
+  .demo + .code-block {
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+  }
+
+  /* Grid and flex items default to min-inline-size: auto, so a wide <pre>
+     stretches the whole demo past the viewport instead of scrolling inside its
+     own code block. Without this, every element page scrolls sideways on a
+     phone. */
+  .demo-figure,
+  .demo-figure > *,
+  .demo {
+    min-inline-size: 0;
+  }
+
+  .demo-figure {
+    display: grid;
+
+    & > figcaption {
+      font-size: var(--step--1);
+      color: var(--text-muted);
+      margin-block-start: var(--space-2xs);
+    }
+  }
+
+  /* Buttons inside demos inherit the site's design system rather than looking
+     like a sandboxed widget. */
+  .demo :is(button, .demo-button):not(.unstyled) {
+    appearance: none;
+    font: inherit;
+    padding: 0.5em 1em;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-strong);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  }
+
+  .demo :is(button, .demo-button).primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: light-dark(white, oklch(16% 0.006 265));
+
+    &:hover {
+      color: light-dark(white, oklch(16% 0.006 265));
+      filter: brightness(1.08);
+    }
+  }
+}
+
+@layer utilities {
+  .visually-hidden:not(:focus):not(:active) {
+    clip-path: inset(50%);
+    block-size: 1px;
+    inline-size: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+  }
+
+  .muted {
+    color: var(--text-muted);
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+  }
+
+  .lede {
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    text-wrap: pretty;
+  }
+}

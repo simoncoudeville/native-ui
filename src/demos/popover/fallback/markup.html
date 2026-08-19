@@ -1,0 +1,20 @@
+<p class="hint">
+  The button starts near the right edge of your screen, where there is no room
+  for the popover — so it flips to the left. Scroll the rail to move the button
+  leftwards and watch it flip back.
+</p>
+
+<div class="rail">
+  <span class="spacer"></span>
+  <button popovertarget="tip" id="tip-anchor">Anchored to me</button>
+  <span class="spacer"></span>
+</div>
+
+<div popover id="tip">
+  <strong>I flip when I'd overflow.</strong>
+  <p>
+    My preferred position is to the right of the button. When that would push me
+    off-screen, <code>position-try-fallbacks</code> moves me to the other side
+    instead — recalculated on every scroll, with no listener.
+  </p>
+</div>

@@ -1,0 +1,65 @@
+@scope (.demo-fallback) {
+  .hint {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    margin-block-end: 1rem;
+  }
+
+  /* Stays within the content column. A full-bleed trick like
+     `margin-inline: calc(50% - 50vw)` assumes the column is centred in the
+     viewport, which stops being true the moment there's a sidebar — it then
+     pushes the whole page into horizontal overflow. */
+  .rail {
+    inline-size: 100%;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    padding-block: 1rem;
+    border-block: 1px dashed var(--border);
+    scrollbar-width: thin;
+  }
+
+  /* Sized against the rail, not the viewport, so at rest the button sits near
+     the right-hand edge — where there is no room for the popover's preferred
+     position and the fallback has to fire. */
+  .spacer {
+    flex: 0 0 92%;
+  }
+
+  #tip-anchor {
+    anchor-name: --tip-anchor;
+    white-space: nowrap;
+  }
+
+  #tip {
+    position-anchor: --tip-anchor;
+
+    /* Clear the UA stylesheet's `inset: 0` first — otherwise the end insets
+       stay at 0, the box is over-constrained, and anchor() is ignored. */
+    inset: auto;
+
+    /* Preferred: sit to the right of the button, aligned to its top.
+       The keyword inside anchor() is relative to that property's axis. */
+    inset-inline-start: anchor(end);
+    inset-block-start: anchor(start);
+    margin: 0 0 0 0.5rem;
+
+    /* If the preferred position would overflow, try these in order. The
+       browser picks the first that fits and re-evaluates as you scroll. */
+    position-try-fallbacks: flip-inline, flip-block, flip-inline flip-block;
+
+    inline-size: 20rem;
+    padding: 1rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    color: var(--text);
+    box-shadow: var(--shadow-overlay);
+  }
+
+  #tip p {
+    margin-block-start: 0.35rem;
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+}

@@ -1,0 +1,54 @@
+---
+import '../styles/global.css';
+import Sidebar from '../components/Sidebar.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Forwarded to the sidebar so the active page expands into its sections. */
+  headings?: { depth: number; slug: string; text: string }[];
+}
+
+const { title, description, headings } = Astro.props;
+const path = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>&#9642;</text></svg>"
+    />
+  </head>
+  <body>
+    <div class="shell">
+      <a class="skip-link" href="#content">Skip to content</a>
+
+      <Sidebar headings={headings} />
+
+      <div class="shell-main">
+        <main id="content" tabindex="-1">
+          <slot />
+        </main>
+
+        <footer class="site-footer">
+          <p>
+            Support data from
+            <a href="https://github.com/web-platform-dx/web-features">web-features</a>
+            and
+            <a href="https://github.com/mdn/browser-compat-data">MDN browser-compat-data</a>
+            (CC0 1.0). Usage share from
+            <a href="https://caniuse.com/">caniuse.com</a>, licensed
+            <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+          </p>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

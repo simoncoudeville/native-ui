@@ -1,0 +1,85 @@
+@scope (.demo-buttons) {
+  /* Shown only where the feature is missing, so the demo explains itself
+     instead of silently appearing broken. */
+  .unsupported-note {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--status-limited);
+    border-radius: var(--radius);
+    background: var(--status-limited-soft);
+    font-size: var(--step--1);
+    margin-block-end: 1rem;
+  }
+
+  @supports selector(::scroll-button(inline-start)) {
+    .unsupported-note {
+      display: none;
+    }
+  }
+
+  /* The buttons are generated inside the scroll container, but their
+     containing block is this positioned wrapper — so they stay put
+     instead of scrolling away with the content. */
+  .frame {
+    position: relative;
+    padding-inline: 3rem;
+  }
+
+  .track {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0 0 1rem;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+  }
+
+  .track > li {
+    flex: 0 0 min(14rem, 60%);
+    scroll-snap-align: center;
+    display: grid;
+    place-items: center;
+    min-block-size: 8rem;
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklch, var(--accent) calc(var(--i) * 7%), var(--bg-sunken));
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  /* ::scroll-button() generates a real, focusable button element. The
+     browser disables it automatically at either end of the scroll range. */
+  .track::scroll-button(*) {
+    position: absolute;
+    inset-block-start: calc(50% - 1.5rem);
+
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .track::scroll-button(*):hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .track::scroll-button(*):disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .track::scroll-button(inline-start) {
+    content: '\2190' / 'Scroll to previous item';
+    inset-inline-start: 0;
+  }
+
+  .track::scroll-button(inline-end) {
+    content: '\2192' / 'Scroll to next item';
+    inset-inline-end: 0;
+  }
+}

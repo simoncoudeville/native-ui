@@ -1,0 +1,26 @@
+---
+import { getCollection, render } from 'astro:content';
+import ElementPage from '../../layouts/ElementPage.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('elements', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+
+<ElementPage
+  title={entry.data.title}
+  elementName={entry.data.elementName}
+  description={entry.data.description}
+  webFeatures={entry.data.webFeatures}
+  links={entry.data.links}
+  headings={headings}
+>
+  <Content />
+</ElementPage>

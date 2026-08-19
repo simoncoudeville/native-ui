@@ -1,0 +1,46 @@
+@scope (.demo-anchored) {
+  /* Name the anchor, then position against it. The popover is in the top
+     layer and the button is not — anchor positioning links the two
+     without any measuring in JavaScript. */
+  #menu-button {
+    anchor-name: --menu-button;
+  }
+
+  #menu {
+    position-anchor: --menu-button;
+
+    /* The UA stylesheet gives popovers `inset: 0`. Leaving the end insets at 0
+       over-constrains the box and the anchor() values never take effect, so
+       clear them before setting the two edges we actually want. */
+    inset: auto;
+
+    /* anchor() resolves to an edge of the anchor element. The keyword is
+       relative to the axis of the property it sits in: `end` inside
+       inset-block-start means the anchor's block-end (bottom) edge. */
+    inset-block-start: anchor(end);
+    inset-inline-start: anchor(start);
+    margin: 0.4rem 0 0;
+
+    min-inline-size: anchor-size(inline);
+    padding: 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    box-shadow: var(--shadow-overlay);
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  #menu a {
+    padding: 0.4rem 0.75rem;
+    border-radius: calc(var(--radius) - 2px);
+    color: var(--text);
+    text-decoration: none;
+    font-size: var(--step--1);
+  }
+
+  #menu a:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+}

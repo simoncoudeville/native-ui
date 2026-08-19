@@ -1,0 +1,26 @@
+{
+  "name": "native-ui",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "baseline:check": "node scripts/baseline-check.mjs",
+    "baseline:update": "node scripts/baseline-update.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^7.0.6",
+    "astro": "^7.2.3",
+    "web-features": "^3.35.0"
+  },
+  "devDependencies": {
+    "@mdn/browser-compat-data": "^8.0.11",
+    "caniuse-db": "^1.0.30001809"
+  }
+}

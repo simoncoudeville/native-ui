@@ -1,0 +1,11 @@
+<div class="row">
+  <button command="show" commandfor="toast">Show non-modal</button>
+  <button command="close" commandfor="toast">Close</button>
+</div>
+
+<!-- command="show" calls show(), not showModal(): no backdrop,
+     no focus trap, and the rest of the page stays interactive. -->
+<dialog id="toast">
+  <strong>Saved to drafts.</strong>
+  <p>You can keep using the page — this dialog isn't modal.</p>
+</dialog>

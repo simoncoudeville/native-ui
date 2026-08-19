@@ -1,0 +1,64 @@
+---
+import { getFeature, LEVEL_LABEL, formatDate, type BaselineLevel } from '../lib/baseline.ts';
+import { getUsageShare } from '../lib/caniuse.ts';
+import { recordFeature } from '../lib/report.ts';
+
+interface Props {
+  /** A web-features id, or several — the badge then shows the weakest. */
+  featureId: string;
+  /** Render the full panel with per-browser versions. */
+  detailed?: boolean;
+}
+
+const { featureId, detailed = false } = Astro.props;
+
+recordFeature(featureId);
+const info = getFeature(featureId);
+const usage = getUsageShare(featureId);
+
+const level: BaselineLevel = info.level;
+const since = formatDate(
+  level === 'widely' ? info.highDate : level === 'newly' ? info.lowDate : undefined,
+);
+
+const label = LEVEL_LABEL[level];
+---
+
+{
+  detailed ? (
+    <section class="support-panel" aria-label={`Browser support for ${info.name}`}>
+      <div class="support-head">
+        <span class="badge" data-level={level}>{label}</span>
+        <span class="support-feature">{info.name}</span>
+        {since && <span class="support-meta">since {since}</span>}
+        {usage !== null && (
+          <span class="support-meta">~{usage.toFixed(1)}% of tracked users</span>
+        )}
+      </div>
+
+      <ul class="browser-row">
+        {[...info.desktop, ...info.mobile].map((browser) => (
+          <li
+            class="browser-chip"
+            data-state={browser.state}
+            title={
+              browser.state === 'partial'
+                ? `Partial: ${browser.covered?.supported} of ${browser.covered?.total} sub-features`
+                : undefined
+            }
+          >
+            {browser.name}
+            <span class="browser-version">
+              {browser.state === 'none' ? 'no' : browser.version}
+              {browser.state === 'partial' && '+ partial'}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ) : (
+    <span class="badge" data-level={level}>
+      {label}
+    </span>
+  )
+}

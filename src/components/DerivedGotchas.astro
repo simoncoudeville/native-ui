@@ -1,0 +1,68 @@
+---
+import { getFeature, unsupportedIn, partiallySupportedIn } from '../lib/baseline.ts';
+import { getDerivedNotes } from '../lib/bcd.ts';
+import { recordFeature } from '../lib/report.ts';
+
+interface Props {
+  featureId: string;
+}
+
+const { featureId } = Astro.props;
+
+recordFeature(featureId);
+const info = getFeature(featureId);
+const missing = unsupportedIn(info);
+const partial = partiallySupportedIn(info);
+const { notes, truncated } = getDerivedNotes(info.compatFeatures);
+
+const facts: string[] = [];
+
+if (missing.length > 0) {
+  facts.push(`No support in ${missing.map((b) => b.name).join(', ')}.`);
+}
+
+for (const browser of partial) {
+  facts.push(
+    `${browser.name} implements ${browser.covered?.supported} of ` +
+      `${browser.covered?.total} sub-features (from ${browser.version}).`,
+  );
+}
+
+const hasContent = facts.length > 0 || notes.length > 0;
+---
+
+{
+  hasContent && (
+    <div class="stack-l">
+      {facts.length > 0 && (
+        <ul class="derived-notes">
+          {facts.map((fact) => (
+            <li>
+              <span class="note-browsers">{info.name}</span>
+              <span>{fact}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {notes.length > 0 && (
+        <ul class="derived-notes">
+          {notes.map((note) => (
+            <li>
+              <span class="note-browsers">{note.browserNames.join(' · ')}</span>
+              <span set:html={note.html} />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <p class="derived-source">
+        {notes.length > 0 || facts.length > 0 ? 'Generated from ' : ''}
+        web-features and MDN browser-compat-data at build time
+        {truncated > 0 && ` — ${truncated} further note${truncated === 1 ? '' : 's'} omitted`}.
+        Only caveats that still apply are shown; notes attached to versions where
+        the bug was fixed are filtered out.
+      </p>
+    </div>
+  )
+}

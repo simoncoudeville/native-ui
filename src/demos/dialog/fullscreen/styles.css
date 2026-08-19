@@ -1,0 +1,52 @@
+@scope (.demo-fullscreen) {
+  dialog {
+    /* No positioning tricks needed. A modal dialog is in the top layer,
+       so the demo card's border, overflow and stacking context can't
+       clip it — this is the behaviour an iframe would destroy. */
+    inline-size: 100vw;
+    max-inline-size: 100vw;
+    block-size: 100dvh;
+    max-block-size: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  /* Centring the contents needs display: grid, but setting it on the bare
+     `dialog` selector would beat the UA rule that hides a closed dialog and
+     leave this one sitting in the page. Attach it to [open] instead. */
+  dialog[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  dialog::backdrop {
+    background: var(--bg);
+  }
+
+  .inner {
+    max-inline-size: 40rem;
+    padding: 2rem;
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    text-align: start;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--accent);
+  }
+
+  h2 {
+    font-size: var(--step-3);
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    color: var(--text-muted);
+  }
+}

@@ -1,0 +1,30 @@
+@scope (.demo-closedby) {
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .row button {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  dialog {
+    padding: 1.5rem;
+    max-inline-size: 26rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+    color: var(--text);
+    box-shadow: var(--shadow-overlay);
+  }
+
+  dialog::backdrop {
+    background: oklch(20% 0 0 / 0.5);
+  }
+
+  dialog p {
+    margin-block-end: 1rem;
+  }
+}
