@@ -44,7 +44,9 @@ jobs:
             exit 0
           fi
 
-          cutoff=$(date -u -d "-${GRACE_DAYS} days" +%Y-%m-%dT%H:%M:%SZ)
+          # "N days ago" rather than "-N days" so a negative override puts the
+          # cutoff in the future, which is how the path gets exercised on demand.
+          cutoff=$(date -u -d "${GRACE_DAYS} days ago" +%Y-%m-%dT%H:%M:%SZ)
           echo "Selecting labelled data PRs created before $cutoff"
 
           # Restricted to the label this repo's own refresh job applies, so it
