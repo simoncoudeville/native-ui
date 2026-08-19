@@ -6,12 +6,12 @@ browser.
 ## Stack
 
 - **Astro 7** (static output), MDX content collections
-- **Plain modern CSS** — `@layer`, nesting, container queries, `light-dark()`
+- **Plain modern CSS**: `@layer`, nesting, container queries, `light-dark()`
 - **Shiki** for highlighting, dual-themed through `light-dark()`
 - **web-features / BCD / caniuse** for support data, read at build time
 
 Light and dark follow the OS preference via `light-dark()`. There is no theme
-toggle, no script, and no `prefers-color-scheme` media query anywhere — one
+toggle, no script, and no `prefers-color-scheme` media query anywhere. One
 `color-scheme: light dark` declaration drives the whole site, including the
 code blocks.
 
@@ -48,8 +48,8 @@ Three data sources, each used only for what it is good at:
 `.github/workflows/baseline.yml` runs weekly: it refreshes the three data
 packages, rebuilds, and diffs the result against
 `src/data/baseline-snapshot.json`. If anything moved, it opens a pull request
-whose body is written as a briefing — what changed on the web platform, in
-plain language — rather than a diff to rubber-stamp.
+whose body is written as a briefing (what changed on the web platform, in
+plain language) rather than a diff to rubber-stamp.
 
 If that PR sits untouched for `AUTO_MERGE_AFTER_DAYS` (default 7), a second
 workflow merges it, so a busy fortnight can't quietly park the site on stale
@@ -92,5 +92,5 @@ corrected badges.
    web-features ids, **primary first** (the landing-page badge shows the
    primary; weaker features are disclosed beneath it).
 2. Add demo folders under `src/demos/<slug>/`.
-3. Run `npm run build` — an unknown or renamed feature id fails the build
+3. Run `npm run build`. An unknown or renamed feature id fails the build
    loudly rather than rendering a badge that quietly lies.

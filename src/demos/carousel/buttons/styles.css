@@ -17,7 +17,7 @@
   }
 
   /* The buttons are generated inside the scroll container, but their
-     containing block is this positioned wrapper — so they stay put
+     containing block is this positioned wrapper, so they stay put
      instead of scrolling away with the content. */
   .frame {
     position: relative;

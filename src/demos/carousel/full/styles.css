@@ -68,7 +68,7 @@
     cursor: pointer;
   }
 
-  /* :target-current is the marker for the item currently in view —
+  /* :target-current is the marker for the item currently in view,
      the active-dot state, with no scroll listener anywhere. */
   .track > li::scroll-marker:target-current {
     background: var(--accent);

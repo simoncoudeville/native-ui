@@ -13,7 +13,7 @@ export interface DerivedNote {
   browsers: string[];
   /** Human-readable browser names, for display. */
   browserNames: string[];
-  /** Sanitised HTML — BCD notes contain <code> and <a> markup. */
+  /** Sanitised HTML. BCD notes contain <code> and <a> markup. */
   html: string;
   kind: 'note' | 'partial' | 'flag';
 }
@@ -59,7 +59,7 @@ function browserName(id: string): string {
 /**
  * Collects per-browser caveats for a feature straight from MDN's compat data.
  *
- * Raw output is unusable for wide features — `anchor-positioning` spans 325
+ * Raw output is unusable for wide features. `anchor-positioning` spans 325
  * compat keys carrying 443 notes, most of them the same sentence repeated
  * across every key and every browser. So notes are deduplicated by text, with
  * the browsers they apply to merged into one entry.

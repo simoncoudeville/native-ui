@@ -73,7 +73,7 @@
   }
 
   /* The rule above outranks the UA stylesheet's `margin: auto` on dialogs and
-     popovers — author styles beat UA styles whatever the layer — which is why
+     popovers (author styles beat UA styles whatever the layer), which is why
      an otherwise untouched showModal() dialog or open popover pins itself to
      the top-left corner instead of centring in the viewport. Put the centring
      back at zero specificity, so any demo that positions its own overlay still
@@ -180,7 +180,7 @@
 @layer layout {
   /*
     Documentation shell: a sticky sidebar column and a scrolling content
-    column. No top bar — the sidebar carries the identity and the whole
+    column. No top bar: the sidebar carries the identity and the whole
     catalogue, so vertical space above the content stays free.
   */
   .shell {

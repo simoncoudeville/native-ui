@@ -1,6 +1,6 @@
 @scope (.demo-anchored) {
   /* Name the anchor, then position against it. The popover is in the top
-     layer and the button is not — anchor positioning links the two
+     layer and the button is not. Anchor positioning links the two
      without any measuring in JavaScript. */
   #menu-button {
     anchor-name: --menu-button;

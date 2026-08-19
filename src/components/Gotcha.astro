@@ -11,7 +11,7 @@ interface Props {
    */
   staleWhen?: StaleWhen;
   /**
-   * Marks a claim that cannot expire — accessibility guidance, spec behaviour —
+   * Marks a claim that cannot expire (accessibility guidance, spec behaviour)
    * so it isn't reported as an unguarded block. Deliberately explicit: the
    * point is to tell "timeless" apart from "forgot the assertion".
    */
@@ -38,7 +38,7 @@ if (staleWhen) {
 {
   /*
     A retired block renders nothing. The prose stays in the .mdx source so it
-    can be rewritten, but it is never served — the failure mode is losing a
+    can be rewritten, but it is never served. The failure mode is losing a
     caveat, never publishing one that has become false.
   */
   !retired && (

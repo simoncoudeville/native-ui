@@ -50,7 +50,7 @@ function toArray(value: unknown): string[] {
   return Array.isArray(value) ? (value as string[]) : [value as string];
 }
 
-/** BCD versions look like "135", "26.2", "17.4" — and occasionally "≤37". */
+/** BCD versions look like "135", "26.2", "17.4", and occasionally "≤37". */
 function compareVersions(a: string, b: string): number {
   const parts = (v: string) =>
     v.replace(/[^0-9.]/g, '').split('.').map((n) => Number.parseInt(n, 10) || 0);
@@ -66,8 +66,8 @@ function compareVersions(a: string, b: string): number {
  * Aggregates support for one browser.
  *
  * web-features only fills the top-level `status.support` map when *every* compat
- * key is supported. For features like `scroll-buttons` — where Chrome implements
- * 10 of 12 keys — that map is empty, and reading it alone would render the
+ * key is supported. For features like `scroll-buttons`, where Chrome implements
+ * 10 of 12 keys, that map is empty, and reading it alone would render the
  * flatly false claim that no browser supports the feature at all. So when the
  * aggregate is silent we fall back to `by_compat_key` and report partial support.
  */
@@ -126,7 +126,7 @@ export function getFeature(id: string): FeatureInfo {
     const target = entry.redirect_target ?? entry.redirect_targets?.join(', ');
     throw new Error(
       `[baseline] web-features id "${id}" is a "${entry.kind}" entry, not a feature` +
-        (target ? ` — it now points at: ${target}.` : '.') +
+        (target ? `. It now points at: ${target}.` : '.') +
         ` Update the webFeatures list in the relevant .mdx file.`,
     );
   }
@@ -165,7 +165,7 @@ export function worstLevel(ids: string[]): BaselineLevel {
     );
 }
 
-/** Browsers with no support at all — the headline caveat on a limited feature. */
+/** Browsers with no support at all, the headline caveat on a limited feature. */
 export function unsupportedIn(info: FeatureInfo): BrowserSupport[] {
   return [...info.desktop, ...info.mobile].filter((b) => b.state === 'none');
 }
