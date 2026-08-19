@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection } from "astro:content";
 
 interface Props {
   /** Headings of the current page, so the active entry can expand in place. */
@@ -8,12 +8,12 @@ interface Props {
 
 const { headings = [] } = Astro.props;
 
-const elements = (await getCollection('elements', ({ data }) => !data.draft)).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const elements = (
+  await getCollection("elements", ({ data }) => !data.draft)
+).sort((a, b) => a.data.order - b.data.order);
 
 const path = Astro.url.pathname;
-const isHome = path === '/';
+const isHome = path === "/";
 
 /*
   Only h2s go in the nav. Deeper headings exist inside the demos' prose and
@@ -25,10 +25,6 @@ const sections = headings.filter((heading) => heading.depth === 2);
 
 <nav class="sidebar" aria-label="Site">
   <a class="brand" href="/">
-    <svg class="brand-mark" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-      <rect x="0.75" y="0.75" width="14.5" height="14.5" rx="3.5" />
-      <rect x="4.25" y="4.25" width="7.5" height="7.5" rx="1.75" class="brand-mark-inner" />
-    </svg>
     <span class="brand-text">
       Native UI
       <small>interactive elements the platform ships</small>
@@ -39,7 +35,7 @@ const sections = headings.filter((heading) => heading.depth === 2);
     <p class="nav-label" id="nav-overview">Overview</p>
     <ul class="nav-list" aria-labelledby="nav-overview">
       <li>
-        <a href="/" aria-current={isHome ? 'page' : undefined}>Introduction</a>
+        <a href="/" aria-current={isHome ? "page" : undefined}>Introduction</a>
       </li>
     </ul>
   </div>
@@ -53,7 +49,11 @@ const sections = headings.filter((heading) => heading.depth === 2);
           const current = path === href;
           return (
             <li>
-              <a href={href} class="mono" aria-current={current ? 'page' : undefined}>
+              <a
+                href={href}
+                class="mono"
+                aria-current={current ? "page" : undefined}
+              >
                 {entry.data.elementName}
               </a>
               {current && sections.length > 0 && (
@@ -79,10 +79,14 @@ const sections = headings.filter((heading) => heading.depth === 2);
         <a href="https://web-platform-dx.github.io/web-features/">Baseline</a>
       </li>
       <li>
-        <a href="https://github.com/web-platform-dx/web-features">web-features</a>
+        <a href="https://github.com/web-platform-dx/web-features"
+          >web-features</a
+        >
       </li>
       <li>
-        <a href="https://github.com/mdn/browser-compat-data">browser-compat-data</a>
+        <a href="https://github.com/mdn/browser-compat-data"
+          >browser-compat-data</a
+        >
       </li>
     </ul>
   </div>

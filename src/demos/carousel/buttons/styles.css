@@ -22,6 +22,11 @@
   .frame {
     position: relative;
     padding-inline: 3rem;
+
+    /* The shared .demo wrapper is a grid with justify-items: start, so a
+       scroll container would otherwise shrink-wrap its content and the
+       end-aligned scroll button would land mid-card. */
+    inline-size: 100%;
   }
 
   .track {

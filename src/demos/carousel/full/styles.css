@@ -20,6 +20,7 @@
     margin: 0;
     padding: 0 0 1rem;
     list-style: none;
+    inline-size: 100%;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
@@ -46,10 +47,20 @@
     gap: 0.5rem;
     justify-content: center;
     padding-block-start: 0.75rem;
+
+    /* The group is shrink-to-fit by default, so justify-content has nothing
+       to distribute until it spans the scroller. */
+    inline-size: 100%;
   }
 
   .track > li::scroll-marker {
     content: '';
+
+    /* Markers are flex items of ::scroll-marker-group, so they inherit
+       flex-shrink: 1 and get squeezed to slivers however wide you make them.
+       Opting out of shrinking is what actually makes them render as dots. */
+    flex: 0 0 auto;
+
     inline-size: 0.6rem;
     block-size: 0.6rem;
     border: 1px solid var(--border-strong);
