@@ -1,3 +1,6 @@
+/* Surface and animation come from the shared popover component, opted into
+   with class="popover". This demo is about what happens when the preferred
+   position doesn't fit. */
 @scope (.demo-fallback) {
   .hint {
     font-size: var(--step--1);
@@ -49,37 +52,9 @@
     position-try-fallbacks: flip-inline, flip-block, flip-inline flip-block;
 
     inline-size: 20rem;
-    padding: var(--overlay-padding);
-    border: var(--overlay-border);
-    border-radius: var(--overlay-radius);
-    background: var(--overlay-bg);
-    color: var(--text);
-    box-shadow: var(--shadow-overlay);
-
-    opacity: 0;
-    translate: var(--overlay-offset);
-    transition:
-      opacity var(--overlay-duration) ease,
-      translate var(--overlay-duration) ease,
-      display var(--overlay-duration) allow-discrete,
-      overlay var(--overlay-duration) allow-discrete;
-  }
-
-  #tip:popover-open {
-    opacity: 1;
-    translate: none;
-  }
-
-  @starting-style {
-    #tip:popover-open {
-      opacity: 0;
-      translate: var(--overlay-offset);
-    }
   }
 
   #tip p {
     margin-block-start: 0.35rem;
-    color: var(--text-muted);
-    font-size: var(--step--1);
   }
 }

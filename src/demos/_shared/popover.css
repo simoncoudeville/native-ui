@@ -1,0 +1,71 @@
+/* The surface and the open/close animation shared by every popover demo on
+   this site. A demo opts in with class="popover" and then writes only what it
+   is there to teach.
+
+   These rules sit in the demo layer, and a demo's own styles.css is injected
+   unlayered. Unlayered declarations beat layered ones whatever their
+   specificity, so a demo overrides anything here just by declaring it. No
+   !important, no specificity ladder.
+
+   A popover is not a dialog with a different attribute. It shares the
+   --overlay-* tokens and nothing else: no backdrop dim, since none of these
+   popovers make the page behind them inert, and its own values, reassigned on
+   the component root below rather than in global.css so that changing how
+   every popover moves leaves dialogs alone. */
+@layer demo {
+  .popover {
+    padding: var(--overlay-padding);
+    border: var(--overlay-border);
+    border-radius: var(--overlay-radius);
+    background: var(--overlay-bg);
+    color: var(--text);
+    box-shadow: var(--shadow-overlay);
+
+    /* The closed state, and the values the exit transition runs back to.
+       Opening a popover moves it from display: none to displayed and from
+       outside the top layer to inside it. Both of those are discrete, so
+       allow-discrete is what brings display and overlay into the transition
+       and keeps the popover rendered, and painted above the page, until the
+       fade has finished. */
+    opacity: 0;
+    translate: var(--overlay-offset);
+    transition:
+      opacity var(--overlay-duration) ease,
+      translate var(--overlay-duration) ease,
+      display var(--overlay-duration) allow-discrete,
+      overlay var(--overlay-duration) allow-discrete;
+  }
+
+  /* :popover-open, not a bare .popover: a demo that needs display: grid when
+     open must declare it in this state, because a plain display on the base
+     rule would beat the UA rule that hides a closed popover and the panel
+     would never go away. */
+  .popover:popover-open {
+    opacity: 1;
+    translate: none;
+  }
+
+  /* An element coming out of display: none has no previous style to
+     interpolate from, so the values it enters from are declared here.
+     Without this the popover arrives at full opacity and only the exit runs. */
+  @starting-style {
+    .popover:popover-open {
+      opacity: 0;
+      translate: var(--overlay-offset);
+    }
+  }
+
+  /* Content typography. The type scale and the colour are the component's; the
+     spacing between one demo's own contents is that demo's layout and stays in
+     its styles.css. A popover carries less text than a dialog, so it sets a
+     smaller scale than the dialog component does. */
+  .popover h3 {
+    font-size: var(--step-0);
+    margin-block-end: 0.35rem;
+  }
+
+  .popover p {
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+}

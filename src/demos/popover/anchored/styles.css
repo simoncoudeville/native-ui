@@ -1,3 +1,6 @@
+/* Surface and animation come from the shared popover component, opted into
+   with class="popover". This demo is about anchoring, so that is all that is
+   left here. */
 @scope (.demo-anchored) {
   /* Name the anchor, then position against it. The popover is in the top
      layer and the button is not. Anchor positioning links the two
@@ -22,30 +25,16 @@
     margin: 0.4rem 0 0;
 
     /* A menu of links wants a tighter box than a panel of prose, so the
-       shared surface is kept and only its padding reassigned. */
+       component's surface is kept and only its padding reassigned. */
     --overlay-padding: var(--space-3xs);
 
     min-inline-size: anchor-size(inline);
-    padding: var(--overlay-padding);
-    border: var(--overlay-border);
-    border-radius: var(--overlay-radius);
-    background: var(--overlay-bg);
-    color: var(--text);
-    box-shadow: var(--shadow-overlay);
 
     /* Declared here rather than in the :popover-open rule below. display is
        held to the end of the exit by allow-discrete; a gap declared alongside
        it would revert as soon as the menu closes, collapsing the links
        together for the length of the fade. */
     gap: 0.1rem;
-
-    opacity: 0;
-    translate: var(--overlay-offset);
-    transition:
-      opacity var(--overlay-duration) ease,
-      translate var(--overlay-duration) ease,
-      display var(--overlay-duration) allow-discrete,
-      overlay var(--overlay-duration) allow-discrete;
   }
 
   /* :popover-open, not a bare #menu: the UA stylesheet hides a closed popover
@@ -53,18 +42,6 @@
      specificity and leave the menu on screen permanently. */
   #menu:popover-open {
     display: grid;
-    opacity: 1;
-    translate: none;
-  }
-
-  /* Only opacity and translate differ between the two states. The anchored
-     insets are the same in both, so the menu slides the last half-rem into
-     place under its button rather than travelling across the page. */
-  @starting-style {
-    #menu:popover-open {
-      opacity: 0;
-      translate: var(--overlay-offset);
-    }
   }
 
   #menu a {

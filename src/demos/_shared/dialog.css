@@ -1,0 +1,91 @@
+/* The surface and the open/close animation shared by every dialog demo on this
+   site. A demo opts in with class="dialog" and then writes only what it is
+   there to teach.
+
+   These rules sit in the demo layer, and a demo's own styles.css is injected
+   unlayered. Unlayered declarations beat layered ones whatever their
+   specificity, so a demo overrides anything here just by declaring it. No
+   !important, no specificity ladder.
+
+   Every value is an --overlay-* token, so a demo that wants a different
+   surface or a different entry reassigns the token on its own element rather
+   than restating the rule. */
+@layer demo {
+  .dialog {
+    padding: var(--overlay-padding);
+    border: var(--overlay-border);
+    border-radius: var(--overlay-radius);
+    background: var(--overlay-bg);
+    color: var(--text);
+    box-shadow: var(--shadow-overlay);
+
+    /* The closed state, and the values the exit transition runs back to.
+       Opening a dialog moves it from display: none to displayed and from
+       outside the top layer to inside it. Both of those are discrete, so
+       allow-discrete is what brings display and overlay into the transition
+       and keeps the dialog rendered, and painted above the page, until the
+       fade has finished. */
+    opacity: 0;
+    translate: var(--overlay-offset);
+    transition:
+      opacity var(--overlay-duration) ease,
+      translate var(--overlay-duration) ease,
+      display var(--overlay-duration) allow-discrete,
+      overlay var(--overlay-duration) allow-discrete;
+  }
+
+  .dialog[open] {
+    opacity: 1;
+    translate: none;
+  }
+
+  /* An element coming out of display: none has no previous style to
+     interpolate from, so the values it enters from are declared here.
+     Without this the dialog arrives at full opacity and only the exit runs. */
+  @starting-style {
+    .dialog[open] {
+      opacity: 0;
+      translate: var(--overlay-offset);
+    }
+  }
+
+  /* ::backdrop is a separate element as far as animation goes: its own
+     transition, its own @starting-style, its own allow-discrete entries.
+     Animating the dialog alone leaves the dim behind it snapping in and out. */
+  .dialog::backdrop {
+    background: transparent;
+    transition:
+      background var(--overlay-duration) ease,
+      display var(--overlay-duration) allow-discrete,
+      overlay var(--overlay-duration) allow-discrete;
+  }
+
+  .dialog[open]::backdrop {
+    background: var(--overlay-backdrop);
+  }
+
+  @starting-style {
+    .dialog[open]::backdrop {
+      background: transparent;
+    }
+  }
+
+  /* Content typography. The type scale and the colour are the component's; the
+     spacing between one demo's own contents is that demo's layout and stays in
+     its styles.css. */
+  .dialog h3 {
+    font-size: var(--step-1);
+    margin-block-end: 0.5rem;
+  }
+
+  .dialog p {
+    color: var(--text-muted);
+  }
+
+  /* The gap under a paragraph is the same relationship in every dialog, so the
+     component sets it once from the space scale. :not(:last-child) keeps it
+     from adding a trailing gap inside the dialog's own padding. */
+  .dialog p:not(:last-child) {
+    margin-block-end: var(--space-m);
+  }
+}

@@ -23,6 +23,19 @@ Other rules for anything a reader sees:
   "powerful", "simply", "just", "seamlessly", "delve".
 - Short sentences over long ones. Cut a clause before adding punctuation to
   hold it.
+- Write about the element, never about this site. A page documents what the
+  browser now does and what it costs. How the demos here are wired up (shared
+  stylesheets, opt-in classes, cascade layers, `@scope`, why two files are
+  separate) is invisible to the reader and does not belong in the copy at all,
+  not even as a lead-in to a code block.
+- Do not frame JavaScript as the enemy. The point is that the browser now
+  does this natively, not that script is bad. State what the native version
+  gives you and leave it there. No "no JavaScript required", no jabs at
+  libraries, no counting the kilobytes someone else shipped.
+- That includes counting the script on our own pages. Never write "there is no
+  JavaScript on this page", in prose, a heading or a page title. It reads as a
+  boast about an absence, and a page may well gain script later without its
+  copy becoming wrong.
 - Never claim browser support in prose. Support facts are computed at build
   time. If a sentence depends on a browser lacking support, it belongs in a
   `<Gotcha>` with a `staleWhen` assertion.
@@ -72,6 +85,11 @@ is reported as unguarded at build time and will fail review.
 - One stylesheet, `src/styles/global.css`, in declared layers:
   `reset, tokens, base, layout, components, demo, utilities`. Put new rules in
   the right layer rather than raising specificity.
+- The one exception is `src/demos/_shared/*.css`: one file per shared demo
+  component, wrapped in `@layer demo`, loaded by `Base.astro` after
+  `global.css`, which has to be imported first because layer order is set by
+  first appearance. These files are plumbing. They are never shown or
+  explained on the page.
 - Colours are `oklch()` wrapped in `light-dark()`. Greys are chroma 0, so they
   read as actual grey rather than the faintly blue cool grey a hue-tinted ramp
   gives you.
@@ -100,6 +118,15 @@ yet. Say so rather than shipping the script.
   styles off another without an iframe. Keep that wrapper.
 - The `name` prop is unique per page and doubles as the class the demo's CSS
   targets.
+- A dialog or popover demo opts into its shared component with `class="dialog"`
+  or `class="popover"` and then writes only what it is there to teach. Do not
+  restate the surface or the open/close transition in a demo.
+- Those components are separate files on purpose. They share the `--overlay-*`
+  tokens and nothing else, so popover motion can change without touching
+  dialogs. `--overlay-offset` is the knob for entering from a different edge.
+- A demo's `styles.css` is injected unlayered, so it beats the component layer
+  whatever its specificity. Override by declaring the property. Never reach for
+  `!important` or a heavier selector.
 
 ## Working here
 

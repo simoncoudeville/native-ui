@@ -1,0 +1,48 @@
+---
+import { Code } from 'astro:components';
+import { SHIKI_THEMES } from '../lib/shiki.ts';
+
+interface Props {
+  /** Unique per page; used for the tab and panel ids. */
+  name: string;
+  code: string;
+  lang: 'html' | 'css' | 'js';
+  /** Shown on the tab. Usually a filename. */
+  label: string;
+}
+
+const { name, code, lang, label } = Astro.props;
+---
+
+{/*
+  Same markup as the code block inside Demo.astro, with one panel. The single
+  tab is deliberate: the tab and copy script in Demo.astro walks every
+  .code-block on the page and skips any that has no tabs, so a block written
+  without one would lose its copy button too.
+*/}
+<div class="code-block">
+  <div class="code-tabs" role="tablist" data-code-tabs hidden>
+    <button
+      type="button"
+      role="tab"
+      class="code-tab"
+      id={`tab-${name}`}
+      aria-controls={`panel-${name}`}
+      aria-selected="true"
+    >
+      {label}
+    </button>
+    <button type="button" class="copy-button" data-copy>Copy</button>
+  </div>
+
+  <div
+    class="code-panel"
+    id={`panel-${name}`}
+    role="tabpanel"
+    aria-labelledby={`tab-${name}`}
+    data-lang={label}
+  >
+    <p class="code-lang mono muted" data-code-label>{label}</p>
+    <Code code={code.trim()} lang={lang} themes={SHIKI_THEMES} defaultColor={false} />
+  </div>
+</div>

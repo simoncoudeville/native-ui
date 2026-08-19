@@ -1,3 +1,6 @@
+/* Surface and animation come from the shared popover component, opted into
+   with class="popover". What is left is where this panel sits and how its
+   contents are laid out. */
 @scope (.demo-actions) {
   .row {
     display: flex;
@@ -10,12 +13,6 @@
     inset-block-end: 1rem;
     inset-inline: auto 1rem;
     max-inline-size: 24rem;
-    padding: var(--overlay-padding);
-    border: var(--overlay-border);
-    border-radius: var(--overlay-radius);
-    background: var(--overlay-bg);
-    color: var(--text);
-    box-shadow: var(--shadow-overlay);
 
     /* Grid properties belong here, not in the :popover-open rule. display is
        held to the end of the exit by allow-discrete, but anything else in that
@@ -23,14 +20,6 @@
        would vanish and the button would stretch for the length of the fade. */
     gap: 0.75rem;
     justify-items: start;
-
-    opacity: 0;
-    translate: var(--overlay-offset);
-    transition:
-      opacity var(--overlay-duration) ease,
-      translate var(--overlay-duration) ease,
-      display var(--overlay-duration) allow-discrete,
-      overlay var(--overlay-duration) allow-discrete;
   }
 
   /* :popover-open, not a bare [popover]: a plain `display: grid` would
@@ -38,14 +27,5 @@
      never go away. */
   [popover]:popover-open {
     display: grid;
-    opacity: 1;
-    translate: none;
-  }
-
-  @starting-style {
-    [popover]:popover-open {
-      opacity: 0;
-      translate: var(--overlay-offset);
-    }
   }
 }

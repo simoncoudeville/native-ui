@@ -1,5 +1,5 @@
 ---
-title: Dialogs you can open without writing JavaScript
+title: Dialogs with declarative open and close
 elementName: "Dialog"
 description: Modal and non-modal dialogs, top-layer promotion and ::backdrop, opened and closed declaratively with the Invoker Commands API.
 webFeatures:
@@ -23,14 +23,15 @@ links:
 ---
 
 import Demo from "../../components/Demo.astro";
+import CodeBlock from "../../components/CodeBlock.astro";
 import Gotcha from "../../components/Gotcha.astro";
 import DerivedGotchas from "../../components/DerivedGotchas.astro";
 import BaselineBadge from "../../components/BaselineBadge.astro";
 
 import modalHtml from "../../demos/dialog/modal/markup.html?raw";
 import modalCss from "../../demos/dialog/modal/styles.css?raw";
-import fullscreenHtml from "../../demos/dialog/fullscreen/markup.html?raw";
-import fullscreenCss from "../../demos/dialog/fullscreen/styles.css?raw";
+import placementHtml from "../../demos/dialog/placement/markup.html?raw";
+import placementCss from "../../demos/dialog/placement/styles.css?raw";
 import closedbyHtml from "../../demos/dialog/closedby/markup.html?raw";
 import closedbyCss from "../../demos/dialog/closedby/styles.css?raw";
 
@@ -39,9 +40,6 @@ caveat: you had to reach into JavaScript to call `showModal()` and `close()`.
 The Invoker Commands API removes that last step. A button with `command` and
 `commandfor` names the element it acts on and the action it performs, and the
 browser wires up the rest, including keyboard behaviour and focus.
-
-Every demo on this page is static HTML and CSS. There is no JavaScript on the
-page driving any of them.
 
 ## Modal dialogs
 
@@ -69,7 +67,7 @@ an exit that is cut off at its first frame. Three additions fix that.
 rather than removing it at once. In the `transition` shorthand it is written as
 a keyword after the property and duration.
 
-`@starting-style` supplies the values to animate *from*. An element that was
+`@starting-style` supplies the values to animate _from_. An element that was
 `display: none` has no previous style to interpolate from, so without it the
 dialog arrives at full opacity and only the exit animates.
 
@@ -84,12 +82,12 @@ and transitioning it is the only thing an author can do with it. With
 `allow-discrete` it holds the dialog in the top layer until the exit finishes,
 instead of dropping it out on the first frame.
 
-| Piece                                 | Support                                            |
-| ------------------------------------- | -------------------------------------------------- |
-| `transition`                          | <BaselineBadge featureId="transitions" />          |
-| `transition-behavior: allow-discrete` | <BaselineBadge featureId="transition-behavior" />  |
-| `@starting-style`                     | <BaselineBadge featureId="starting-style" />       |
-| `overlay`                             | <BaselineBadge featureId="overlay" />              |
+| Piece                                 | Support                                           |
+| ------------------------------------- | ------------------------------------------------- |
+| `transition`                          | <BaselineBadge featureId="transitions" />         |
+| `transition-behavior: allow-discrete` | <BaselineBadge featureId="transition-behavior" /> |
+| `@starting-style`                     | <BaselineBadge featureId="starting-style" />      |
+| `overlay`                             | <BaselineBadge featureId="overlay" />             |
 
 `::backdrop` is a separate element as far as animation goes, so it needs its
 own `transition`, its own `@starting-style` and its own `allow-discrete`
@@ -109,23 +107,29 @@ opening a non-modal dialog still takes a line of script. That is why there is
 no demo of one on this page. Closing works either way, and a popover is the
 closer fit for a panel that should open declaratively.
 
-## Top layer, proven
+## Placement
 
-This is the demo that justifies rendering everything inline instead of in an
-iframe. The dialog below lives inside a bordered, padded card in the middle of
-this page, and opens at the full size of your viewport.
+A modal dialog is centred because the UA stylesheet gives it `margin: auto`
+inside `inset: 0`. Set one of those margins to 0 and the free space all goes to
+the opposite side, which pins the box to an edge. That is the whole trick behind
+a drawer, a bottom sheet and a full-screen panel: three margin values and a
+size.
+
+Panels that touch two opposite edges also have to lift the UA cap of
+`max-height: calc(100% - 6px - 2em)`, which is what normally keeps a dialog
+clear of the viewport edge. The odd-looking numbers are the default 3px border
+and 1em padding on each side.
 
 <Demo
-  name="fullscreen"
-  html={fullscreenHtml}
-  css={fullscreenCss}
-  caption="Sized with 100vw / 100dvh. Its container cannot clip it, because it is no longer painted inside it."
+  name="placement"
+  html={placementHtml}
+  css={placementCss}
+  caption="Drawer, bottom sheet and full screen. Each names the offset it enters from in a custom property, so one transition drives all three."
 />
 
-No `position: fixed`, no `z-index`, no portal. A modal dialog is moved to the
-top layer, which sits above the entire document and outside every stacking
-context on the page. Put that same dialog in an iframe and `100dvh` would mean
-the height of the iframe. The effect disappears completely.
+None of them use `position: fixed`, a `z-index` or a portal. A modal dialog is
+moved to the top layer, which sits above the entire document and outside every
+stacking context, so the bordered card these are nested in cannot clip them.
 
 ## Controlling how a dialog closes
 
@@ -174,12 +178,11 @@ hand-written "click outside to close" logic.
   kind="quirk"
   staleWhen={{ feature: "overlay", baseline: "low" }}
 >
-  A browser that doesn't know the property drops it from the transition list
-  and runs everything else, so the dialog still fades out. It leaves the top
-  layer as it closes instead of when the fade ends, so the exit is painted in
-  normal document order, where content that follows the dialog can cover it.
-  Short exits make that repaint hard to catch. Nothing else about the dialog
-  changes.
+  A browser that doesn't know the property drops it from the transition list and
+  runs everything else, so the dialog still fades out. It leaves the top layer
+  as it closes instead of when the fade ends, so the exit is painted in normal
+  document order, where content that follows the dialog can cover it. Short
+  exits make that repaint hard to catch. Nothing else about the dialog changes.
 </Gotcha>
 
 <Gotcha title="Give focus somewhere sensible" kind="a11y" evergreen>

@@ -26,6 +26,7 @@ links:
 ---
 
 import Demo from "../../components/Demo.astro";
+import CodeBlock from "../../components/CodeBlock.astro";
 import Gotcha from "../../components/Gotcha.astro";
 import DerivedGotchas from "../../components/DerivedGotchas.astro";
 import BaselineBadge from "../../components/BaselineBadge.astro";
@@ -44,9 +45,8 @@ one to handle click-outside-to-close and focus, another to work out where the
 thing should actually sit. The `popover` attribute covers the first. CSS anchor
 positioning covers the second.
 
-Together they replace a surprising amount of code. Unlike a JavaScript
-positioner, the browser recalculates on scroll and resize without a single
-event listener.
+The browser owns both jobs from there. It recalculates the position on scroll
+and resize, and keeps the popover in the top layer while it is open.
 
 ## The popover attribute
 
@@ -87,11 +87,11 @@ understands.
 `popovertarget` is the older spelling, and it does one thing rather than many.
 Both name the target the same way, so only the action differs:
 
-| `popovertargetaction` | `command`          |
-| --------------------- | ------------------ |
-| `show`                | `show-popover`     |
-| `hide`                | `hide-popover`     |
-| `toggle` (default)    | `toggle-popover`   |
+| `popovertargetaction` | `command`        |
+| --------------------- | ---------------- |
+| `show`                | `show-popover`   |
+| `hide`                | `hide-popover`   |
+| `toggle` (default)    | `toggle-popover` |
 
 Both are live and neither is deprecated. `popovertarget` shipped first and is
 the shorter thing to type when a button only ever toggles one popover, which is
@@ -148,7 +148,7 @@ against `display`, it holds the element rendered for the length of the
 transition instead of removing it at once. In the `transition` shorthand it is
 written as a keyword after the property and duration.
 
-`@starting-style` supplies the values to animate *from*. An element that was
+`@starting-style` supplies the values to animate _from_. An element that was
 `display: none` has no previous style to interpolate from, so without it the
 popover arrives at full opacity and only the exit animates.
 
@@ -163,12 +163,12 @@ browser, and transitioning it is the only thing you can do with it. Listed with
 `allow-discrete`, it keeps the popover painted above the page until the exit
 finishes.
 
-| Piece                                 | Support                                            |
-| ------------------------------------- | -------------------------------------------------- |
-| `transition`                          | <BaselineBadge featureId="transitions" />          |
-| `transition-behavior: allow-discrete` | <BaselineBadge featureId="transition-behavior" />  |
-| `@starting-style`                     | <BaselineBadge featureId="starting-style" />       |
-| `overlay`                             | <BaselineBadge featureId="overlay" />              |
+| Piece                                 | Support                                           |
+| ------------------------------------- | ------------------------------------------------- |
+| `transition`                          | <BaselineBadge featureId="transitions" />         |
+| `transition-behavior: allow-discrete` | <BaselineBadge featureId="transition-behavior" /> |
+| `@starting-style`                     | <BaselineBadge featureId="starting-style" />      |
+| `overlay`                             | <BaselineBadge featureId="overlay" />             |
 
 ## Gotchas
 
@@ -205,11 +205,11 @@ finishes.
   kind="quirk"
   staleWhen={{ feature: "overlay", baseline: "low" }}
 >
-  A browser that doesn't know the property drops it from the transition list
-  and runs the rest, so the popover still fades. It just leaves the top layer
-  the moment it closes, which puts the fade back in normal paint order where
-  later content can cover it. The fix is not a polyfill, it's a short exit:
-  at a couple of hundred milliseconds the repaint is hard to catch.
+  A browser that doesn't know the property drops it from the transition list and
+  runs the rest, so the popover still fades. It just leaves the top layer the
+  moment it closes, which puts the fade back in normal paint order where later
+  content can cover it. The fix is not a polyfill, it's a short exit: at a
+  couple of hundred milliseconds the repaint is hard to catch.
 </Gotcha>
 
 <Gotcha title="A popover is not a dialog" kind="a11y" evergreen>
@@ -220,12 +220,11 @@ finishes.
 </Gotcha>
 
 <Gotcha title="The button needs to say what it controls" kind="a11y" evergreen>
-  `popovertarget` and `commandfor` wire up behaviour but not semantics.
-  Browsers now infer
-  `aria-expanded` and `aria-details` from it in most cases, but the accessible
-  name is still yours to write: a button labelled `⋯` tells a screen reader
-  nothing. For a menu, `aria-label="Account menu"` on the trigger costs one
-  attribute.
+  `popovertarget` and `commandfor` wire up behaviour but not semantics. Browsers
+  now infer `aria-expanded` and `aria-details` from it in most cases, but the
+  accessible name is still yours to write: a button labelled `⋯` tells a screen
+  reader nothing. For a menu, `aria-label="Account menu"` on the trigger costs
+  one attribute.
 </Gotcha>
 
 <Gotcha title="Anchored elements must be positioned" kind="quirk" evergreen>

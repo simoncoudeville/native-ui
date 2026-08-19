@@ -1,46 +1,8 @@
+/* Surface, animation and content typography all come from the shared popover
+   component, opted into with class="popover". The width is the only thing this
+   demo sets for itself. */
 @scope (.demo-basic) {
   [popover] {
     max-inline-size: 26rem;
-    padding: var(--overlay-padding);
-    border: var(--overlay-border);
-    border-radius: var(--overlay-radius);
-    background: var(--overlay-bg);
-    color: var(--text);
-    box-shadow: var(--shadow-overlay);
-
-    /* The closed state, and the values the exit transition runs back to.
-       allow-discrete brings display and overlay into the transition, so the
-       popover stays visible and stays in the top layer until the fade ends. */
-    opacity: 0;
-    translate: var(--overlay-offset);
-    transition:
-      opacity var(--overlay-duration) ease,
-      translate var(--overlay-duration) ease,
-      display var(--overlay-duration) allow-discrete,
-      overlay var(--overlay-duration) allow-discrete;
-  }
-
-  [popover]:popover-open {
-    opacity: 1;
-    translate: none;
-  }
-
-  /* An element coming out of display: none has no previous style to animate
-     from, so the values it enters from are declared here. */
-  @starting-style {
-    [popover]:popover-open {
-      opacity: 0;
-      translate: var(--overlay-offset);
-    }
-  }
-
-  [popover] h3 {
-    font-size: var(--step-0);
-    margin-block-end: 0.35rem;
-  }
-
-  [popover] p {
-    color: var(--text-muted);
-    font-size: var(--step--1);
   }
 }

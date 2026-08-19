@@ -5,17 +5,17 @@
 </div>
 
 <!-- Click the backdrop or press Escape on each to feel the difference. -->
-<dialog id="any" closedby="any">
+<dialog id="any" class="dialog" closedby="any">
   <p><code>any</code>: light dismiss. Click outside or press Escape.</p>
   <button command="close" commandfor="any">Close</button>
 </dialog>
 
-<dialog id="request" closedby="closerequest">
+<dialog id="request" class="dialog" closedby="closerequest">
   <p><code>closerequest</code>: Escape closes it, clicking outside does not.</p>
   <button command="close" commandfor="request">Close</button>
 </dialog>
 
-<dialog id="none" closedby="none">
+<dialog id="none" class="dialog" closedby="none">
   <p><code>none</code>: only this button closes it.</p>
   <button command="close" commandfor="none">Close</button>
 </dialog>

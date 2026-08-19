@@ -1,5 +1,11 @@
 ---
 import '../styles/global.css';
+/* Shared demo components, one file per element. They live in @layer demo,
+   which global.css declares, so global.css has to be imported first: layer
+   order is set by first appearance, and a component file arriving first would
+   register demo ahead of every other layer. */
+import '../demos/_shared/dialog.css';
+import '../demos/_shared/popover.css';
 import Sidebar from '../components/Sidebar.astro';
 
 interface Props {
