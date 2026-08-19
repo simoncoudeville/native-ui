@@ -70,7 +70,7 @@
       }
     },
     "dialog-closedby": {
-      "level": "limited",
+      "level": "widely",
       "support": {
         "chrome": {
           "state": "full",
@@ -85,8 +85,8 @@
           "version": "141"
         },
         "safari": {
-          "state": "none",
-          "version": null
+          "state": "full",
+          "version": "27"
         },
         "chrome_android": {
           "state": "full",
@@ -97,8 +97,8 @@
           "version": "141"
         },
         "safari_ios": {
-          "state": "none",
-          "version": null
+          "state": "full",
+          "version": "27"
         }
       }
     },
