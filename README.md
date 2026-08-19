@@ -1,38 +1,7 @@
 # Native UI
 
-A documentation site cataloguing modern HTML and CSS interactive elements —
-the features that used to require a JavaScript library and now ship in the
+A documentation site cataloguing modern HTML and CSS interactive elements. The features that used to require a JavaScript library and now ship in the
 browser.
-
-The site's own construction is the argument: no framework runtime, no CSS
-framework, and no iframes. Every demo is plain HTML/CSS/vanilla JS rendered
-inline, sharing the site's own stylesheet.
-
-## Why no iframes
-
-`<dialog>` and popovers are promoted to the browser's **top layer**, which sits
-above the entire document. Boxing a demo in an iframe would silently break the
-exact behaviour it exists to show — a full-screen dialog's `100dvh` would mean
-the height of the iframe, not the viewport.
-
-Demos are isolated from each other with `@scope` instead. Each demo's CSS is
-authored wrapped in `@scope (.demo-<name>)`, so four demos can each style a bare
-`dialog` selector without colliding.
-
-## Demos are single-source
-
-Each demo lives as plain files on disk:
-
-```
-src/demos/<page>/<demo>/
-  markup.html    # rendered into the page AND shown in the snippet
-  styles.css     # authored wrapped in @scope
-  behavior.js    # optional — currently unused, which is the point
-```
-
-`Demo.astro` imports them with `?raw` and uses the same strings twice: once via
-`set:html` to render the live demo, once fed to Shiki for the code block. The
-snippet cannot drift from the demo because they are the same bytes.
 
 ## Stack
 
@@ -73,12 +42,6 @@ Three data sources, each used only for what it is good at:
 | `web-features` | Baseline status | Support badges |
 | `@mdn/browser-compat-data` | Per-browser notes, partial-implementation flags | Auto-generated gotchas |
 | `caniuse-db` | Real-world usage share | One optional line |
-
-caniuse covers only 3 of this site's 8 tracked features, so it is enrichment
-only. Its `notes` are deliberately unused — most are historical (it still
-describes `<dialog>` as needing a `chrome://flags` toggle). BCD notes attached
-to `version_removed` entries are filtered out for the same reason: they
-describe bugs that have since been fixed.
 
 ### The weekly job
 
