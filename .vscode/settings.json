@@ -1,0 +1,9 @@
+{
+  // Demo markup files are HTML fragments injected into a page, not documents.
+  // Treating them as `html` makes the W3C validator extensions demand a
+  // doctype, head, and body. `handlebars` keeps the HTML highlighting without
+  // triggering `onLanguage:html` validation.
+  "files.associations": {
+    "**/src/demos/**/markup.html": "handlebars"
+  }
+}

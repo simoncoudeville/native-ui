@@ -3,11 +3,11 @@
    and only its paint order changes. */
 @scope (.demo-modal) {
   dialog {
-    padding: 1.5rem;
+    padding: var(--overlay-padding);
     max-inline-size: 30rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    background: var(--bg-raised);
+    border: var(--overlay-border);
+    border-radius: var(--overlay-radius);
+    background: var(--overlay-bg);
     color: var(--text);
     box-shadow: var(--shadow-overlay);
 
@@ -35,7 +35,7 @@
   }
 
   dialog::backdrop {
-    background: oklch(20% 0 0 / 0);
+    background: transparent;
     transition:
       background 0.2s ease,
       display 0.2s allow-discrete,
@@ -43,12 +43,12 @@
   }
 
   dialog[open]::backdrop {
-    background: oklch(20% 0 0 / 0.5);
+    background: var(--overlay-backdrop);
   }
 
   @starting-style {
     dialog[open]::backdrop {
-      background: oklch(20% 0 0 / 0);
+      background: transparent;
     }
   }
 

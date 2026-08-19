@@ -10,10 +10,10 @@
     inset-block-end: 1rem;
     inset-inline: auto 1rem;
     max-inline-size: 24rem;
-    padding: 1rem 1.25rem;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    background: var(--bg-raised);
+    padding: var(--overlay-padding);
+    border: var(--overlay-border);
+    border-radius: var(--overlay-radius);
+    background: var(--overlay-bg);
     color: var(--text);
     box-shadow: var(--shadow-overlay);
   }

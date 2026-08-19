@@ -21,19 +21,30 @@
     inset-inline-start: anchor(start);
     margin: 0.4rem 0 0;
 
+    /* A menu of links wants a tighter box than a panel of prose, so the
+       shared surface is kept and only its padding reassigned. */
+    --overlay-padding: var(--space-3xs);
+
     min-inline-size: anchor-size(inline);
-    padding: 0.4rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--bg-raised);
+    padding: var(--overlay-padding);
+    border: var(--overlay-border);
+    border-radius: var(--overlay-radius);
+    background: var(--overlay-bg);
+    color: var(--text);
     box-shadow: var(--shadow-overlay);
+  }
+
+  /* :popover-open, not a bare #menu: the UA stylesheet hides a closed popover
+     with `display: none`, and a plain `display: grid` here would beat it on
+     specificity and leave the menu on screen permanently. */
+  #menu:popover-open {
     display: grid;
     gap: 0.1rem;
   }
 
   #menu a {
     padding: 0.4rem 0.75rem;
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: calc(var(--overlay-radius) - var(--overlay-padding));
     color: var(--text);
     text-decoration: none;
     font-size: var(--step--1);

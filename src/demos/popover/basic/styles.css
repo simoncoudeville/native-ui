@@ -1,10 +1,10 @@
 @scope (.demo-basic) {
   [popover] {
     max-inline-size: 26rem;
-    padding: 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    background: var(--bg-raised);
+    padding: var(--overlay-padding);
+    border: var(--overlay-border);
+    border-radius: var(--overlay-radius);
+    background: var(--overlay-bg);
     color: var(--text);
     box-shadow: var(--shadow-overlay);
   }

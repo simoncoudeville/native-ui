@@ -1,12 +1,12 @@
 <div class="row">
-  <button popovertarget="panel" popovertargetaction="show">Show</button>
-  <button popovertarget="panel" popovertargetaction="hide">Hide</button>
-  <button popovertarget="panel" popovertargetaction="toggle">Toggle</button>
+  <button command="show-popover" commandfor="panel">Show</button>
+  <button command="hide-popover" commandfor="panel">Hide</button>
+  <button command="toggle-popover" commandfor="panel">Toggle</button>
 </div>
 
 <!-- manual popovers ignore light dismiss: clicking outside or pressing
      Escape leaves them open, and several can be open at once. -->
 <div popover="manual" id="panel">
   <p><code>popover="manual"</code>: dismissed only by a button that targets it.</p>
-  <button popovertarget="panel" popovertargetaction="hide">Dismiss</button>
+  <button command="hide-popover" commandfor="panel">Dismiss</button>
 </div>

@@ -5,6 +5,7 @@ description: "The popover attribute plus CSS anchor positioning: overlays that l
 webFeatures:
   - popover
   - anchor-positioning
+  - invoker-commands
 order: 2
 links:
   - label: "HTML Standard: the popover attribute"
@@ -15,6 +16,9 @@ links:
     kind: spec
   - label: "MDN: Popover API"
     href: https://developer.mozilla.org/en-US/docs/Web/API/Popover_API
+    kind: mdn
+  - label: "MDN: Invoker Commands API"
+    href: https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API
     kind: mdn
   - label: "MDN: CSS anchor positioning"
     href: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning
@@ -62,8 +66,7 @@ never clipped by `overflow: hidden` and never lose a `z-index` fight.
 
 `popover="auto"` (the default) light-dismisses and forces one-at-a-time
 behaviour. `popover="manual"` does neither. It stays until something explicitly
-hides it. `popovertargetaction` picks which of `show`, `hide` or `toggle` a
-button performs.
+hides it, so each button has to say which action it performs.
 
 <Demo
   name="actions"
@@ -71,6 +74,32 @@ button performs.
   css={actionsCss}
   caption="Manual popovers ignore outside clicks and Escape entirely."
 />
+
+## Two ways to write the trigger
+
+The buttons above use `commandfor` to name the target and `command` to name the
+action. That is the Invoker Commands API, the same pair that opens and closes a
+[dialog](/elements/dialog/). It is not popover-specific: `commandfor` takes the
+id of any element in the document, and `command` takes an action that element
+understands.
+
+`popovertarget` is the older spelling, and it does one thing rather than many.
+Both name the target the same way, so only the action differs:
+
+| `popovertargetaction` | `command`          |
+| --------------------- | ------------------ |
+| `show`                | `show-popover`     |
+| `hide`                | `hide-popover`     |
+| `toggle` (default)    | `toggle-popover`   |
+
+Both are live and neither is deprecated. `popovertarget` shipped first and is
+the shorter thing to type when a button only ever toggles one popover, which is
+why the other demos on this page use it. Reach for `command` when you want one
+mental model across popovers, dialogs and the custom `--action` invokers, or
+when the action is anything other than toggle.
+
+Only a `<button>` can carry either form. On a link or a `<div>` the attributes
+do nothing.
 
 ## Anchoring to the trigger
 
@@ -119,6 +148,19 @@ anything more elaborate, `@position-try` lets you define named custom positions.
   and give everyone else a statically positioned fallback.
 </Gotcha>
 
+<Gotcha
+  title="command is newer than popovertarget by eleven months"
+  kind="quirk"
+  staleWhen={{ feature: "invoker-commands", baseline: "high" }}
+>
+  A browser that understands `popover` does not necessarily understand
+  `command`. Where it doesn't, the button is inert: no error, no fallback, just
+  a control that does nothing. `popovertarget` has the lower floor of the two,
+  so prefer it for a plain toggle, or load the [invokers
+  polyfill](https://github.com/keithamus/invokers-polyfill) behind a `if
+  (!('command' in HTMLButtonElement.prototype))` check.
+</Gotcha>
+
 <Gotcha title="A popover is not a dialog" kind="a11y" evergreen>
   Popovers don't trap focus and don't make the rest of the page inert. That is
   correct for menus and tooltips, and wrong for anything demanding a decision
@@ -127,7 +169,8 @@ anything more elaborate, `@position-try` lets you define named custom positions.
 </Gotcha>
 
 <Gotcha title="The button needs to say what it controls" kind="a11y" evergreen>
-  `popovertarget` wires up behaviour but not semantics. Browsers now infer
+  `popovertarget` and `commandfor` wire up behaviour but not semantics.
+  Browsers now infer
   `aria-expanded` and `aria-details` from it in most cases, but the accessible
   name is still yours to write: a button labelled `⋯` tells a screen reader
   nothing. For a menu, `aria-label="Account menu"` on the trigger costs one

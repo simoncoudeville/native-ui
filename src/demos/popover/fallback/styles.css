@@ -49,10 +49,10 @@
     position-try-fallbacks: flip-inline, flip-block, flip-inline flip-block;
 
     inline-size: 20rem;
-    padding: 1rem;
-    border: 1px solid var(--accent);
-    border-radius: var(--radius);
-    background: var(--bg-raised);
+    padding: var(--overlay-padding);
+    border: var(--overlay-border);
+    border-radius: var(--overlay-radius);
+    background: var(--overlay-bg);
     color: var(--text);
     box-shadow: var(--shadow-overlay);
   }
