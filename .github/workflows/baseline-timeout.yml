@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: '0 7 * * *'
   workflow_dispatch:
+    inputs:
+      grace_days:
+        description: 'Override the grace period for this run (days)'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -19,33 +24,65 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Merge data PRs older than the grace period
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Find data PRs past the grace period
+        id: find
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Repository variable. Set to 0 to require a manual merge always.
-          GRACE_DAYS: ${{ vars.AUTO_MERGE_AFTER_DAYS || '7' }}
+          GRACE_DAYS: ${{ inputs.grace_days || vars.AUTO_MERGE_AFTER_DAYS || '7' }}
         run: |
           set -euo pipefail
 
           if [ "$GRACE_DAYS" = "0" ]; then
             echo "AUTO_MERGE_AFTER_DAYS=0 — timeout merging disabled."
+            echo "prs=" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           cutoff=$(date -u -d "-${GRACE_DAYS} days" +%Y-%m-%dT%H:%M:%SZ)
-          echo "Merging labelled data PRs created before $cutoff"
+          echo "Selecting labelled data PRs created before $cutoff"
 
           # Restricted to the label this repo's own refresh job applies, so it
           # can never touch a human's pull request.
-          gh pr list \
+          prs=$(gh pr list \
             --label baseline-data \
             --state open \
-            --json number,createdAt,isDraft,mergeable,title \
-            --jq ".[] | select(.createdAt < \"$cutoff\") | select(.isDraft == false) | .number" \
-          | while read -r pr; do
-              echo "PR #$pr is past the grace period — enabling auto-merge."
-              # --auto still waits for required checks, so a red build is
-              # never merged by the timeout path.
-              gh pr merge "$pr" --auto --squash \
-                --subject "chore: refresh Baseline data (auto-merged after ${GRACE_DAYS}d)"
-            done
+            --json number,createdAt,isDraft \
+            --jq "[.[] | select(.createdAt < \"$cutoff\") | select(.isDraft == false) | .number] | join(\" \")")
+
+          echo "Matched: ${prs:-none}"
+          echo "prs=$prs" >> "$GITHUB_OUTPUT"
+
+      - name: Verify and merge
+        if: steps.find.outputs.prs != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRS: ${{ steps.find.outputs.prs }}
+          GRACE_DAYS: ${{ inputs.grace_days || vars.AUTO_MERGE_AFTER_DAYS || '7' }}
+        run: |
+          set -euo pipefail
+
+          for pr in $PRS; do
+            echo "::group::PR #$pr"
+
+            # A PR opened with GITHUB_TOKEN does not trigger workflow runs, so
+            # no CI has ever run against it and there is nothing for --auto to
+            # wait on. Merging on a timer without checking would ship whatever
+            # the refresh job produced, unverified. So verify it here instead.
+            gh pr checkout "$pr"
+            npm ci
+            npm run build
+            npm run baseline:check
+
+            echo "Build and snapshot check passed — merging."
+            gh pr merge "$pr" --squash --delete-branch \
+              --subject "chore: refresh Baseline data (auto-merged after ${GRACE_DAYS}d)"
+
+            git checkout -
+            echo "::endgroup::"
+          done
