@@ -28,8 +28,6 @@ import DerivedGotchas from "../../components/DerivedGotchas.astro";
 
 import modalHtml from "../../demos/dialog/modal/markup.html?raw";
 import modalCss from "../../demos/dialog/modal/styles.css?raw";
-import nonModalHtml from "../../demos/dialog/non-modal/markup.html?raw";
-import nonModalCss from "../../demos/dialog/non-modal/styles.css?raw";
 import fullscreenHtml from "../../demos/dialog/fullscreen/markup.html?raw";
 import fullscreenCss from "../../demos/dialog/fullscreen/styles.css?raw";
 import closedbyHtml from "../../demos/dialog/closedby/markup.html?raw";
@@ -65,16 +63,15 @@ halfway.
 
 ## Non-modal dialogs
 
-`command="show"` maps to `show()`. There is no backdrop, no focus trap, and the
+`show()` opens a dialog in place. There is no backdrop, no focus trap, and the
 rest of the page stays interactive. That is closer to an inline panel than an
 overlay.
 
-<Demo
-  name="non-modal"
-  html={nonModalHtml}
-  css={nonModalCss}
-  caption="A non-modal dialog leaves the page usable. Note it is not in the top layer."
-/>
+There is no command for it. The `command` attribute understands `show-modal`,
+`close` and `request-close` for dialogs, and nothing that maps to `show()`, so
+opening a non-modal dialog still takes a line of script. That is why there is
+no demo of one on this page. Closing works either way, and a popover is the
+closer fit for a panel that should open declaratively.
 
 ## Top layer, proven
 
