@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19T20:22:56.973Z",
+  "updatedAt": "2026-09-28T13:18:35.794Z",
   "features": {
     "anchor-positioning": {
       "level": "limited",
@@ -17,8 +17,8 @@
           "version": "147"
         },
         "safari": {
-          "state": "partial",
-          "version": "26"
+          "state": "full",
+          "version": "27"
         },
         "chrome_android": {
           "state": "partial",
@@ -29,8 +29,8 @@
           "version": "147"
         },
         "safari_ios": {
-          "state": "partial",
-          "version": "26"
+          "state": "full",
+          "version": "27"
         }
       }
     },
@@ -207,11 +207,11 @@
       "level": "limited",
       "support": {
         "chrome": {
-          "state": "partial",
+          "state": "full",
           "version": "135"
         },
         "edge": {
-          "state": "partial",
+          "state": "full",
           "version": "135"
         },
         "firefox": {
@@ -223,7 +223,7 @@
           "version": null
         },
         "chrome_android": {
-          "state": "partial",
+          "state": "full",
           "version": "135"
         },
         "firefox_android": {
