@@ -1,16 +1,16 @@
 {
-  "updatedAt": "2026-09-28T13:18:35.794Z",
+  "updatedAt": "2026-11-16T15:14:14.251Z",
   "features": {
     "anchor-positioning": {
       "level": "limited",
       "support": {
         "chrome": {
-          "state": "partial",
-          "version": "125"
+          "state": "full",
+          "version": "157"
         },
         "edge": {
-          "state": "partial",
-          "version": "125"
+          "state": "full",
+          "version": "157"
         },
         "firefox": {
           "state": "partial",
@@ -21,8 +21,8 @@
           "version": "27"
         },
         "chrome_android": {
-          "state": "partial",
-          "version": "125"
+          "state": "full",
+          "version": "157"
         },
         "firefox_android": {
           "state": "partial",
